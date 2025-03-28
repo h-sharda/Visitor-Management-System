@@ -1,0 +1,40 @@
+/* Custom styles that are not covered by Tailwind */
+body {
+    background-color: #f3f4f6; /* Equivalent to bg-gray-100 */
+    min-height: 100vh;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* Additional hover and focus states */
+input[type="file"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Blue ring focus state */
+}
+
+/* Animations */
+@keyframes scaleUp {
+    from {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.animate-entry {
+    animation: scaleUp 0.3s ease-out;
+}
+
+/* Modal backdrop blurred effect */
+#updateModal, #deleteModal {
+    backdrop-filter: blur(4px);
+}

@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const entrySchema = new mongoose.Schema({
   timestamp: { 
-    type: Date, 
-    default: Date.now
+    type: Date,
+    required: true
   },
   imageKey: { 
     type: String, 
@@ -13,6 +13,6 @@ const entrySchema = new mongoose.Schema({
     type: String, 
     default: "ABC123"
   }
-});
+}, { collection: 'vehicle-entries' });
 
 module.exports = mongoose.model('Entry', entrySchema);

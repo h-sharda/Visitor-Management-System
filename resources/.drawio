@@ -1,0 +1,116 @@
+<mxfile host="65bd71144e">
+    <diagram id="Kr54s5Ox46vAP3LTJ5Bx" name="User Authentication">
+        <mxGraphModel dx="857" dy="611" grid="1" gridSize="25" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="13" value="" style="edgeStyle=none;html=1;" parent="1" source="2" target="12" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="edgeStyle=none;html=1;" parent="1" source="2" target="14" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Site is opened, cookies as checked for web tokens" style="whiteSpace=wrap;html=1;rounded=1;glass=0;" parent="1" vertex="1">
+                    <mxGeometry x="387" y="85" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="5" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="5" target="9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" style="edgeStyle=none;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="5" target="10" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Access Level is checked" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="197" y="295" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;Access Level 1 (viewer)&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;i) DB1 entries are shown to user (R)&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;rounded=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="77" y="435" width="145" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Access Level 2 (operator)&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;i) DB1 entries are shown (R).&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ii) Entry uplaod option is shown (C).&lt;/font&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;rounded=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="167" y="555" width="180" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Access Level 3 (admin)&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;i) Full access to DB1 (CRUD operations)&lt;br&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ii) Option to authorize the users in DB2&lt;/font&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;rounded=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="297" y="415" width="180" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="edgeStyle=none;html=1;" parent="1" source="12" target="5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="" style="edgeStyle=none;html=1;" parent="1" source="12" target="5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="&lt;span&gt;&lt;font style=&quot;color: light-dark(rgb(255, 255, 255), rgb(255, 255, 255));&quot;&gt;Web Token found&lt;/font&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;glass=0;" parent="1" vertex="1">
+                    <mxGeometry x="197" y="205" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="" style="edgeStyle=none;html=1;elbow=vertical;" parent="1" source="14" target="32" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" style="edgeStyle=none;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;elbow=vertical;" parent="1" source="14" target="34" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="Web Token not found/ Web token not valid" style="whiteSpace=wrap;html=1;rounded=1;glass=0;" parent="1" vertex="1">
+                    <mxGeometry x="697" y="205" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="" style="edgeStyle=none;html=1;" parent="1" source="32" target="46" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="Sign Up&lt;br&gt;&lt;br&gt;Fills, name, email and purpose, admin manually checks and approves the user, if DB2 contains email, say user already exists." style="whiteSpace=wrap;html=1;rounded=1;glass=0;" parent="1" vertex="1">
+                    <mxGeometry x="547" y="315" width="140" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="" style="edgeStyle=none;html=1;" parent="1" source="34" target="37" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="" style="edgeStyle=none;html=1;" parent="1" source="34" target="39" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="Sign In using email&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;DB2 is checked if email is authorised, if yes, then an OTP is send with 10 min expiry, if not then say user doesn&#39;t exist&lt;/div&gt;" style="whiteSpace=wrap;html=1;rounded=1;glass=0;" parent="1" vertex="1">
+                    <mxGeometry x="772" y="315" width="150" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="37" target="12" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="272" y="75" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="1050" y="500"/>
+                            <mxPoint x="997" y="325"/>
+                            <mxPoint x="947" y="175"/>
+                            <mxPoint x="647" y="75"/>
+                            <mxPoint x="447" y="50"/>
+                            <mxPoint x="297" y="100"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="37" value="Correct email and OTP, create a web token and log the user in&amp;nbsp;" style="whiteSpace=wrap;html=1;rounded=1;glass=0;" parent="1" vertex="1">
+                    <mxGeometry x="897" y="500" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="Incorrect OTP, allow OTP regenration after 5 mins." style="whiteSpace=wrap;html=1;rounded=1;glass=0;" parent="1" vertex="1">
+                    <mxGeometry x="725" y="500" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.02;entryY=0.444;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="46" target="34" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="750" y="375" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="700" y="525"/>
+                            <mxPoint x="725" y="400"/>
+                            <mxPoint x="750" y="383"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="46" value="If Admin sees, the request and add the requested email to DB2, and sends a mail saying you are now authorised." style="whiteSpace=wrap;html=1;rounded=1;glass=0;" parent="1" vertex="1">
+                    <mxGeometry x="557" y="495" width="120" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="&lt;div style=&quot;text-align: center;&quot;&gt;Abbrieviations:&lt;/div&gt;DB1: Vehicle Entry Data Base&lt;div&gt;DB2: Authorised user Data Base&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="22" y="70" width="200" height="75" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="pzDFbswrk_LPjFl1tdAD" name="Image Upload Pipeline">
+        <mxGraphModel dx="617" dy="611" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

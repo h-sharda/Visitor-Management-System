@@ -1,6 +1,7 @@
 const { s3Client, getSignedUrl } = require('../config/aws');
 const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const Entry = require('../models/Entry');
+const extractNumberPlate = require('../services/numberExtraction');
 
 exports.createEntry = async (req, res) => {
   try {
@@ -9,23 +10,34 @@ exports.createEntry = async (req, res) => {
       return res.status(400).send('No file uploaded or invalid file type.');
     }
 
+    const entryTime = new Date();
+
     // S3 upload parameters
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `vehicle-entries/${Date.now()}_${req.file.originalname}`,
+      Key: `vehicle-entries/${entryTime.getTime()}_${req.file.originalname}`,
       Body: req.file.buffer,
       ContentType: req.file.mimetype
     };
 
     // Upload to S3
-    const command = new PutObjectCommand(params);
-    await s3Client.send(command);
+    await s3Client.send(new PutObjectCommand(params));
+
+    const command = new GetObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: params.Key
+    });
+
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    const numberPlate = await extractNumberPlate(signedUrl);
 
     // Create MongoDB document
     const entry = new Entry({
-      timestamp: new Date(),
-      imageKey: params.Key
+      timestamp: entryTime,
+      imageKey: params.Key,
+      number: numberPlate
     });
+    
     await entry.save();
 
     res.redirect('/');

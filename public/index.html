@@ -5,6 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visitor Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .max-h-10vh {
+            max-height: 10vh;
+        }
+        .expanded-image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5); /* Optional overlay background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .expanded-image {
+            max-height: 60%;
+            object-fit: contain;
+        }
+        .close-button {
+            position: fixed;
+            top: 4px;
+            right: 4px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .close-button svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Add responsive container width */
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 80vw;
+            }
+        }
+    </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
@@ -32,14 +73,37 @@
             </form>
         </div>
 
-        <div id="vehicleEntryTable" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Entries will be dynamically loaded here -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Date
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Time
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Vehicle Number
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Image
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="vehicleEntryTable" class="bg-white divide-y divide-gray-200">
+                    <!-- Entries will be dynamically loaded here -->
+                </tbody>
+            </table>
         </div>
 
         <div id="noEntriesMessage" class="text-center text-gray-500 mt-8 hidden">
             No entries uploaded yet.
         </div>
     </div>
+
+    <!-- Image Expansion Container -->
+    <div id="expandedImageContainer" class="hidden"></div>
 
     <!-- Update Number Modal -->
     <div id="updateModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">

@@ -7,10 +7,10 @@ async function fetchEntries() {
         const response = await fetch('/entries');
         const entries = await response.json();
         
-        const entryTable = document.getElementById('vehicleEntryTable');
+        const entryContainer = document.getElementById('vehicleEntryTable');
         const noEntriesMessage = document.getElementById('noEntriesMessage');
         
-        entryTable.innerHTML = ''; // Clear existing entries
+        entryContainer.innerHTML = ''; // Clear existing entries
 
         if (entries.length === 0) {
             noEntriesMessage.classList.remove('hidden');
@@ -18,113 +18,87 @@ async function fetchEntries() {
             noEntriesMessage.classList.add('hidden');
         }
 
-        entries.forEach(entry => {
-            // Format date and time
+        // Group entries by date
+        const entriesByDate = entries.reduce((acc, entry) => {
             const entryDate = new Date(entry.timestamp);
             const formattedDate = entryDate.toLocaleDateString();
-            const formattedTime = entryDate.toLocaleTimeString();
-            
-            // Create table row
-            const row = document.createElement('tr');
-            row.className = 'hover:bg-gray-50 transition-colors';
-            row.setAttribute('data-entry-id', entry._id);
-            
-            // Date cell
-            const dateCell = document.createElement('td');
-            dateCell.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500';
-            dateCell.textContent = formattedDate;
-            
-            // Time cell
-            const timeCell = document.createElement('td');
-            timeCell.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500';
-            timeCell.textContent = formattedTime;
-            
-            // Number cell with inline edit button
-            const numberCell = document.createElement('td');
-            numberCell.className = 'px-6 py-4 whitespace-nowrap';
-            
-            const numberWrapper = document.createElement('div');
-            numberWrapper.className = 'flex items-center space-x-2';
-            
-            const numberSpan = document.createElement('span');
-            numberSpan.id = `number-${entry._id}`;
-            numberSpan.className = 'text-sm font-medium text-gray-900';
-            numberSpan.textContent = entry.number;
-            
-            const editButton = document.createElement('button');
-            editButton.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500 hover:text-blue-700" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                </svg>
-            `;
-            editButton.className = 'hover:bg-blue-100 p-1 rounded-full';
-            editButton.title = 'Edit vehicle number';
-            editButton.onclick = (e) => {
-                e.stopPropagation();
-                openUpdateModal(entry._id);
-            };
-            
-            numberWrapper.appendChild(numberSpan);
-            numberWrapper.appendChild(editButton);
-            numberCell.appendChild(numberWrapper);
-            
-            // Image cell with delete button
-            const imageCell = document.createElement('td');
-            imageCell.className = 'px-6 py-4 relative imageCell';
-            
-            // Create a container for the image and delete button
-            const imageContainer = document.createElement('div');
-            imageContainer.className = 'relative';
-            
-            const img = document.createElement('img');
-            img.src = entry.signedUrl;
-            img.className = 'max-h-10vh object-contain rounded-md cursor-pointer';
-            img.alt = `Vehicle Image`;
-            img.onclick = (e) => {
-                e.stopPropagation();
-                expandImage(entry.signedUrl);
-            };
-            
-            // Create delete button and position it at the top right
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'absolute top-0 right-0 text-red-600 hover:text-red-800 hover:bg-red-100 p-1.5 rounded-full';
-            deleteButton.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-            `;
-            deleteButton.title = 'Delete entry';
-            deleteButton.onclick = (e) => {
-                e.stopPropagation();
-                openDeleteModal(entry._id);
-            };
-            
-            // Add image and delete button to the container
-            imageContainer.appendChild(img);
-            imageContainer.appendChild(deleteButton);
-            
-            // Add the container to the cell
-            imageCell.appendChild(imageContainer);
-            
-            // Add cells to row
-            row.appendChild(dateCell);
-            row.appendChild(timeCell);
-            row.appendChild(numberCell);
-            row.appendChild(imageCell);
-            
-            // Add row to table
-            entryTable.appendChild(row);
+            if (!acc[formattedDate]) {
+                acc[formattedDate] = [];
+            }
+            acc[formattedDate].push(entry);
+            return acc;
+        }, {});
 
+        // Create tables for each date
+        Object.entries(entriesByDate).forEach(([date, dateEntries]) => {
+            const dateHeader = document.createElement('h2');
+            dateHeader.className = 'text-xl font-bold mt-8 mb-4';
+            dateHeader.textContent = `Date: ${date}`;
+            dateHeader.style.textAlign = 'center';
+            entryContainer.appendChild(dateHeader);
+
+            const table = document.createElement('table');
+            table.className = 'min-w-full divide-y divide-gray-200 mb-8';
+            
+            const thead = document.createElement('thead');
+            thead.className = 'bg-gray-50';
+            thead.innerHTML = `
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle Number</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            tbody.className = 'bg-white divide-y divide-gray-200';
+
+            dateEntries.forEach(entry => {
+                const entryDate = new Date(entry.timestamp);
+                const formattedTime = entryDate.toLocaleTimeString();
+                
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors';
+                row.setAttribute('data-entry-id', entry._id);
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formattedTime}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center space-x-2">
+                            <span id="number-${entry._id}" class="text-sm font-medium text-gray-900">${entry.number || 'Not specified'}</span>
+                            <button class="hover:bg-blue-100 p-1 rounded-full" title="Edit vehicle number" onclick="openUpdateModal('${entry._id}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500 hover:text-blue-700" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 relative">
+                        <div class="relative">
+                            <img src="${entry.signedUrl}" class="max-h-10vh object-contain rounded-md cursor-pointer" alt="Vehicle Image" onclick="expandImage('${entry.signedUrl}')">
+                            <button class="absolute top-0 right-0 text-red-600 hover:text-red-800 hover:bg-red-100 p-1.5 rounded-full" title="Delete entry" onclick="openDeleteModal('${entry._id}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+            entryContainer.appendChild(table);
         });
     } catch (error) {
         console.error('Error fetching entries:', error);
-        const entryTable = document.getElementById('vehicleEntryTable');
-        entryTable.innerHTML = `
-            <tr>
-                <td colspan="5" class="px-6 py-4 text-center text-red-500">
-                    Failed to load entries. Please try again later.
-                </td>
-            </tr>
+        const entryContainer = document.getElementById('vehicleEntryTable');
+        entryContainer.innerHTML = `
+            <div class="px-6 py-4 text-center text-red-500">
+                Failed to load entries. Please try again later.
+            </div>
         `;
     }
 }

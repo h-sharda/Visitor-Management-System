@@ -1,5 +1,3 @@
-// services/nummberExtractionService.js
-
 const axios = require('axios');
 
 const extractNumberPlate = async (signedUrl) => {

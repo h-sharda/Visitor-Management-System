@@ -1,5 +1,3 @@
-// controllers/authController.js
-
 const User = require('../models/User');
 const { generateOTP, saveOTP, verifyOTP } = require('../services/otpService');
 const { sendOTPEmail } = require('../services/emailService');

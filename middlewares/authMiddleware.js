@@ -1,5 +1,3 @@
-// middlewares/authMiddleware.js
-
 const { validateToken } = require('../services/authService');
 
 function checkForAuthenticationCookie(cookieName) {

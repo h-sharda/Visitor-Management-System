@@ -1,5 +1,3 @@
-// services/emailService.js
-
 const nodemailer = require('nodemailer');
 
 // Create transporter using Gmail

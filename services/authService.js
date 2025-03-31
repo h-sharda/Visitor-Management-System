@@ -1,7 +1,4 @@
-// services/authService.js
-
 const JWT = require('jsonwebtoken');
-
 const secret = process.env.JWT_SECRET_KEY;
 
 function createTokenForUser(user) {

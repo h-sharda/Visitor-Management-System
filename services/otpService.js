@@ -1,5 +1,3 @@
-// services/otpService.js
-
 const OTP = require('../models/OTP');
 
 // Generate a 6-digit OTP

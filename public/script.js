@@ -1,10 +1,114 @@
 // Global variables to store current entries ID for modal actions
 let currentEntryIdForUpdate = null;
 let currentEntryIdForDelete = null;
+let currentUser = null;
+
+// Check authentication on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkAuthState();
+
+    // Update Modal Listeners
+    document.getElementById('cancelUpdateBtn').addEventListener('click', closeUpdateModal);
+    document.getElementById('confirmUpdateBtn').addEventListener('click', confirmUpdate);
+    
+    // Delete Modal Listeners
+    document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+    document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+
+    // Close modals when clicking outside
+    document.getElementById('updateModal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeUpdateModal();
+    });
+    document.getElementById('deleteModal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeDeleteModal();
+    });
+    
+    // Allow Enter key to submit the update form
+    document.getElementById('updateNumberInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            confirmUpdate();
+        }
+    });
+
+    // Go to sign in button
+    document.getElementById('goToSignIn').addEventListener('click', () => {
+        window.location.href = '/signin';
+    });
+});
+
+// Check authentication state
+async function checkAuthState() {
+    try {
+        const response = await fetch('/user/check-auth');
+        const data = await response.json();
+        
+        if (data.authenticated) {
+            currentUser = data.user;
+            updateAuthUI(true);
+            fetchEntries();
+        } else {
+            updateAuthUI(false);
+            showAuthRequiredMessage();
+        }
+    } catch (error) {
+        console.error('Auth check error:', error);
+        updateAuthUI(false);
+        showAuthRequiredMessage();
+    }
+}
+
+// Update UI based on authentication state
+function updateAuthUI(isAuthenticated) {
+    const authSection = document.getElementById('authSection');
+    
+    if (isAuthenticated && currentUser) {
+        // User is logged in
+        authSection.innerHTML = `
+            <div class="flex items-center">
+                <span class="mr-2">Hello, ${currentUser.name || currentUser.email}</span>
+                <span class="bg-blue-700 text-xs px-2 py-1 rounded-full">${currentUser.role}</span>
+            </div>
+            <a href="/user/logout" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md">Logout</a>
+        `;
+        
+        // Show upload form only for OPERATOR and ADMIN roles
+        const uploadForm = document.getElementById('uploadForm');
+        if (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN') {
+            uploadForm.classList.remove('hidden');
+        } else {
+            uploadForm.classList.add('hidden');
+        }
+    } else {
+        // User is not logged in
+        authSection.innerHTML = `
+            <a href="/signin" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md">Sign In</a>
+        `;
+    }
+}
+
+// Show authentication required message
+function showAuthRequiredMessage() {
+    document.getElementById('authRequiredMessage').classList.remove('hidden');
+    document.getElementById('mainContent').classList.add('hidden');
+}
+
+// Hide authentication required message
+function hideAuthRequiredMessage() {
+    document.getElementById('authRequiredMessage').classList.add('hidden');
+    document.getElementById('mainContent').classList.remove('hidden');
+}
 
 async function fetchEntries() {
     try {
         const response = await fetch('/entries');
+        
+        // Check if unauthorized
+        if (response.status === 401) {
+            updateAuthUI(false);
+            showAuthRequiredMessage();
+            return;
+        }
+        
         const entries = await response.json();
         
         const entryContainer = document.getElementById('vehicleEntryTable');
@@ -62,38 +166,53 @@ async function fetchEntries() {
                 row.className = 'hover:bg-gray-50 transition-colors';
                 row.setAttribute('data-entry-id', entry._id);
                 
+                // Check if user has edit/delete permissions (OPERATOR/ADMIN)
+                const canEdit = currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN');
+                
                 row.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap text-center text-gray-900 text-base font-medium">${formattedTime}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
                     <div class="flex items-center justify-center space-x-2">
                         <span id="number-${entry._id}" class="text-base font-medium text-gray-900">${entry.number}</span>
+                        ${canEdit ? `
                         <button class="hover:bg-blue-100 p-1 rounded-full" title="Edit vehicle number" onclick="openUpdateModal('${entry._id}')">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500 hover:text-blue-700" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                             </svg>
                         </button>
+                        ` : ''}
                     </div>
                 </td>
                 <td class="px-6 py-4 text-center relative">
                     <div class="relative">
                         <img src="${entry.signedUrl}" class="max-h-10vh object-contain rounded-md cursor-pointer mx-auto" alt="Vehicle Image" onclick="expandImage('${entry.signedUrl}')">
+                        ${canEdit ? `
                         <button class="absolute top-0 right-0 text-red-600 hover:text-red-800 hover:bg-red-100 p-1.5 rounded-full" title="Delete entry" onclick="openDeleteModal('${entry._id}')">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                             </svg>
                         </button>
+                        ` : ''}
                     </div>
                 </td>
-            `;                                    
+            `;
                 
                 tbody.appendChild(row);
             });
-
+            
             table.appendChild(tbody);
             entryContainer.appendChild(table);
         });
     } catch (error) {
         console.error('Error fetching entries:', error);
+        
+        // Check if the error is due to authentication issues
+        if (error.status === 401) {
+            updateAuthUI(false);
+            showAuthRequiredMessage();
+            return;
+        }
+        
         const entryContainer = document.getElementById('vehicleEntryTable');
         entryContainer.innerHTML = `
             <div class="px-6 py-4 text-center text-red-500">
@@ -174,6 +293,12 @@ function handleEscapeKey(e) {
 
 // Open Update Modal
 function openUpdateModal(entryID) {
+    // Check if user has permission
+    if (!(currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN'))) {
+        alert('You do not have permission to edit entries');
+        return;
+    }
+    
     const updateModal = document.getElementById('updateModal');
     const updateInput = document.getElementById('updateNumberInput');
     const currentNumber = document.getElementById(`number-${entryID}`).textContent;
@@ -198,6 +323,13 @@ function closeUpdateModal() {
 // Confirm Update
 async function confirmUpdate() {
     if (!currentEntryIdForUpdate) return;
+    
+    // Check if user has permission
+    if (!(currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN'))) {
+        alert('You do not have permission to edit entries');
+        closeUpdateModal();
+        return;
+    }
 
     const updateInput = document.getElementById('updateNumberInput');
     const newNumber = updateInput.value.trim();
@@ -210,6 +342,12 @@ async function confirmUpdate() {
             },
             body: JSON.stringify({ number: newNumber })
         });
+
+        if (response.status === 401) {
+            alert('Your session has expired. Please login again.');
+            window.location.href = '/signin';
+            return;
+        }
 
         if (response.ok) {
             // Update the number in the UI
@@ -228,6 +366,12 @@ async function confirmUpdate() {
 
 // Open Delete Modal
 function openDeleteModal(entryID) {
+    // Check if user has permission
+    if (!(currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN'))) {
+        alert('You do not have permission to delete entries');
+        return;
+    }
+    
     const deleteModal = document.getElementById('deleteModal');
     currentEntryIdForDelete = entryID;
     deleteModal.classList.remove('hidden');
@@ -243,11 +387,24 @@ function closeDeleteModal() {
 // Confirm Delete
 async function confirmDelete() {
     if (!currentEntryIdForDelete) return;
+    
+    // Check if user has permission
+    if (!(currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN'))) {
+        alert('You do not have permission to delete entries');
+        closeDeleteModal();
+        return;
+    }
 
     try {
         const response = await fetch(`/entries/${currentEntryIdForDelete}`, {
             method: 'DELETE'
         });
+
+        if (response.status === 401) {
+            alert('Your session has expired. Please login again.');
+            window.location.href = '/signin';
+            return;
+        }
 
         if (response.ok) {
             // Remove the entry from the UI
@@ -275,55 +432,47 @@ async function confirmDelete() {
     }
 }
 
-// Make collapseImage globally accessible
+// Make functions globally accessible
 window.collapseImage = collapseImage;
-
-// Event Listeners for Modals
-document.addEventListener('DOMContentLoaded', () => {
-    // Update Modal Listeners
-    document.getElementById('cancelUpdateBtn').addEventListener('click', closeUpdateModal);
-    document.getElementById('confirmUpdateBtn').addEventListener('click', confirmUpdate);
-    
-    // Delete Modal Listeners
-    document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
-    document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
-
-    // Close modals when clicking outside
-    document.getElementById('updateModal').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) closeUpdateModal();
-    });
-    document.getElementById('deleteModal').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) closeDeleteModal();
-    });
-    
-    // Allow Enter key to submit the update form
-    document.getElementById('updateNumberInput').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            confirmUpdate();
-        }
-    });
-});
+window.expandImage = expandImage;
+window.openUpdateModal = openUpdateModal;
+window.openDeleteModal = openDeleteModal;
 
 // Existing form submission code
-document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-
-    try {
-        const response = await fetch('/upload', {
-            method: 'POST',
-            body: formData
-        });
-
-        if (response.redirected) {
-            window.location.href = response.url;
-            await fetchEntries();
+const uploadForm = document.getElementById('uploadForm');
+if (uploadForm) {
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Check if user has permission
+        if (!(currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN'))) {
+            alert('You do not have permission to upload entries');
+            return;
         }
-    } catch (error) {
-        console.error('Upload error:', error);
-        alert('Failed to upload entries. Please try again.');
-    }
-});
+        
+        const formData = new FormData(e.target);
 
-// Fetch entries on page load
-fetchEntries();
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.status === 401) {
+                alert('Your session has expired. Please login again.');
+                window.location.href = '/signin';
+                return;
+            }
+
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                // Refresh entries after upload
+                fetchEntries();
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('Failed to upload entry. Please try again.');
+        }
+    });
+}

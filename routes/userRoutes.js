@@ -11,4 +11,14 @@ router.get("/logout", (req, res) => {
   res.clearCookie("token").redirect("/");
 });
 
+router.get('/check-auth', (req, res) => {
+  if (req.user) {
+    return res.json({ 
+      authenticated: true, 
+      user: req.user 
+    });
+  }
+  return res.json({ authenticated: false });
+});
+
 module.exports = router;

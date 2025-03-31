@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const extractNumberPlate = async (signedUrl) => {
   try {
-    const response = await axios.post(process.env.PLATE_EXTRACTION_API, {
+    const response = await axios.post(process.env.NUMBER_EXTRACTION_API, {
       imageUrl: signedUrl
     });
 

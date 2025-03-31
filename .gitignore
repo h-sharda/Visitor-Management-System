@@ -1,3 +1,5 @@
 node_modules
 temp.js
 .env
+temp.txt
+.vercel

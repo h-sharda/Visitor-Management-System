@@ -65,7 +65,7 @@ function updateAuthUI(isAuthenticated) {
         // User is logged in
         authSection.innerHTML = `
             <div class="flex items-center">
-                <span class="mr-2">Hello, ${currentUser.name || currentUser.email}</span>
+                <span class="mr-2">${currentUser.name || currentUser.email}</span>
                 <span class="bg-blue-700 text-xs px-2 py-1 rounded-full">${currentUser.role}</span>
             </div>
             <a href="/user/logout" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md">Logout</a>

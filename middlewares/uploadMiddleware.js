@@ -1,3 +1,5 @@
+// middlewares/uploadMiddleware.js
+
 const multer = require('multer');
 
 // Multer upload configuration

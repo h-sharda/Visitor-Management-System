@@ -1,3 +1,5 @@
+// controllers/entryController.js
+
 const { s3Client, getSignedUrl } = require('../config/aws');
 const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const Entry = require('../models/Entry');

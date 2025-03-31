@@ -11,7 +11,10 @@ function createTokenForUser(user) {
     name: user.fullName,
     role: user.role
   };
-  const token = JWT.sign(payload, secret, { expiresIn: '90d' });
+  const token = JWT.sign(payload, secret, { 
+    expiresIn: '90d',
+    algorithm: 'HS256'
+   });
   return token;
 }
 

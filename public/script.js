@@ -5,11 +5,7 @@ let currentEntryIdForDelete = null;
 async function fetchEntries() {
     try {
         const response = await fetch('/entries');
-        console.log('Entries have been fetched');
-        
         const entries = await response.json();
-
-        console.log(entries);
         
         const entryContainer = document.getElementById('vehicleEntryTable');
         const noEntriesMessage = document.getElementById('noEntriesMessage');

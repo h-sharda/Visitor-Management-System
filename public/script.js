@@ -5,6 +5,8 @@ let currentEntryIdForDelete = null;
 async function fetchEntries() {
     try {
         const response = await fetch('/entries');
+        console.log('Entries have been fetched');
+        
         const entries = await response.json();
         
         const entryContainer = document.getElementById('vehicleEntryTable');

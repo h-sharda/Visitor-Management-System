@@ -31,4 +31,13 @@ const userSchema = new mongoose.Schema({
   }
 }, { collection: 'authorized-users' });
 
+userSchema.pre("save", function (next) {
+  this.email = this.email.toLowerCase().trim();
+  if (!this.fullName) {
+    this.fullName = this.email.split('@')[0];
+  }
+  this.fullName = this.fullName.trim();
+  next();
+});
+
 module.exports = mongoose.model('User', userSchema);

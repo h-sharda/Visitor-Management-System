@@ -20,4 +20,9 @@ const otpSchema = new mongoose.Schema({
   },
 }, { collection: 'user-otps' });
 
+otpSchema.pre("save", function (next) {
+  this.email = this.email.toLowerCase().trim();
+  next();
+});
+
 module.exports = mongoose.model('OTP', otpSchema);

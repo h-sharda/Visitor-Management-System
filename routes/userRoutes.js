@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { requestOTP, verifyLoginOTP } = require("../controllers/authController");
+const { createUser } = require("../controllers/userController");
 
 router.post("/request-otp", requestOTP);
 router.post("/verify-otp", verifyLoginOTP);
@@ -18,5 +19,7 @@ router.get('/check-auth', (req, res) => {
   }
   return res.json({ authenticated: false });
 });
+
+router.post("/create", createUser);
 
 module.exports = router;

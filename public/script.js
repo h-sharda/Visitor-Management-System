@@ -166,8 +166,8 @@ async function fetchEntries() {
                 row.className = 'hover:bg-gray-50 transition-colors';
                 row.setAttribute('data-entry-id', entry._id);
                 
-                // Check if user has edit/delete permissions (OPERATOR/ADMIN)
-                const canEdit = currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN');
+                // Check if user has edit/delete permissions
+                const canEdit = currentUser && currentUser.role === 'ADMIN';
                 
                 row.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap text-center text-gray-900 text-base font-medium">${formattedTime}</td>
@@ -294,7 +294,7 @@ function handleEscapeKey(e) {
 // Open Update Modal
 function openUpdateModal(entryID) {
     // Check if user has permission
-    if (!(currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN'))) {
+    if (!(currentUser && currentUser.role === 'ADMIN')) {
         alert('You do not have permission to edit entries');
         return;
     }
@@ -325,7 +325,7 @@ async function confirmUpdate() {
     if (!currentEntryIdForUpdate) return;
     
     // Check if user has permission
-    if (!(currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN'))) {
+    if (!(currentUser && currentUser.role === 'ADMIN')) {
         alert('You do not have permission to edit entries');
         closeUpdateModal();
         return;
@@ -367,7 +367,7 @@ async function confirmUpdate() {
 // Open Delete Modal
 function openDeleteModal(entryID) {
     // Check if user has permission
-    if (!(currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN'))) {
+    if (!(currentUser && currentUser.role === 'ADMIN')) {
         alert('You do not have permission to delete entries');
         return;
     }
@@ -389,7 +389,7 @@ async function confirmDelete() {
     if (!currentEntryIdForDelete) return;
     
     // Check if user has permission
-    if (!(currentUser && (currentUser.role === 'OPERATOR' || currentUser.role === 'ADMIN'))) {
+    if (!(currentUser && currentUser.role === 'ADMIN')) {
         alert('You do not have permission to delete entries');
         closeDeleteModal();
         return;
@@ -476,3 +476,66 @@ if (uploadForm) {
         }
     });
 }
+
+function updateAuthUI(isAuthenticated) {
+    const authSection = document.getElementById('authSection');
+
+    if (isAuthenticated && currentUser) {
+        authSection.innerHTML = `
+        <div class="flex items-center">
+            <span class="mr-2">${currentUser.name || currentUser.email}</span>
+            <span class="bg-blue-700 text-xs px-2 py-1 rounded-full">${currentUser.role}</span>
+        </div>
+        <a href="/user/logout" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md">Logout</a>
+        `;
+
+        // Hide upload form for non-admins if needed
+        const uploadForm = document.getElementById('uploadForm');
+        if (currentUser.role === 'ADMIN') {
+            uploadForm.classList.remove('hidden');
+        } else {
+            uploadForm.classList.add('hidden');
+        }
+
+        // Show the create user form only for ADMINs
+        const adminForm = document.getElementById('adminUserCreationForm');
+        if (currentUser.role === 'ADMIN') {
+            adminForm.classList.remove('hidden');
+        } else {
+            adminForm.classList.add('hidden');
+        }
+    } else {
+        authSection.innerHTML = `
+        <a href="/signin" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md">Sign In</a>
+        `;
+    }
+}
+
+document.getElementById('createUserForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('newUserName').value.trim();
+    const email = document.getElementById('newUserEmail').value.trim();
+    const role = document.getElementById('newUserRole').value;
+
+    try {
+        const response = await fetch('/user/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, role })
+        });
+
+        if (response.ok) {
+            alert("User created successfully");
+            document.getElementById('createUserForm').reset();
+        } else {
+            const data = await response.json();
+            alert("Error creating user: " + data.message);
+        }
+    } catch (error) {
+        console.error('Error creating user:', error);
+        alert('Failed to create user, please try again.');
+    }
+});

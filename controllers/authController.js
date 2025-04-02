@@ -1,10 +1,10 @@
-const User = require('../models/User');
-const { generateOTP, saveOTP, verifyOTP } = require('../services/otpService');
-const { sendOTPEmail } = require('../services/emailService');
-const { createTokenForUser } = require('../services/authService');
+import User from '../models/User.js';
+import { generateOTP, saveOTP, verifyOTP } from '../services/otpService.js';
+import { sendOTPEmail } from '../services/emailService.js';
+import { createTokenForUser } from '../services/authService.js';
 
 // Request OTP
-async function requestOTP(req, res) {
+export async function requestOTP(req, res) {
   const { email } = req.body;
   
   if (!email) {
@@ -43,7 +43,7 @@ async function requestOTP(req, res) {
 }
 
 // Verify OTP
-async function verifyLoginOTP(req, res) {
+export async function verifyLoginOTP(req, res) {
   const { email, otp } = req.body;
   
   if (!email || !otp) {
@@ -72,8 +72,3 @@ async function verifyLoginOTP(req, res) {
     return res.status(401).json({ success: false, message: error.message });
   }
 }
-
-module.exports = {
-  requestOTP,
-  verifyLoginOTP
-};

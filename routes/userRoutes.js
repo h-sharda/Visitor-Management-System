@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { requestOTP, verifyLoginOTP } from '../controllers/authController.js';
+import { createUser } from '../controllers/userController.js';
+
 const router = express.Router();
-const { requestOTP, verifyLoginOTP } = require("../controllers/authController");
-const { createUser } = require("../controllers/userController");
 
 router.post("/request-otp", requestOTP);
 router.post("/verify-otp", verifyLoginOTP);
@@ -22,4 +23,4 @@ router.get('/check-auth', (req, res) => {
 
 router.post("/create", createUser);
 
-module.exports = router;
+export default router;

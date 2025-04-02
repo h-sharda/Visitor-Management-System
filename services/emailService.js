@@ -1,6 +1,5 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
-// Create transporter using Gmail
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -9,8 +8,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Send OTP via email
-async function sendOTPEmail(email, otp) {
+export async function sendOTPEmail(email, otp) {
   try {
     const mailOptions = {
       from: process.env.GMAIL,
@@ -34,7 +32,3 @@ async function sendOTPEmail(email, otp) {
     return { success: false, error: error.message };
   }
 }
-
-module.exports = {
-  sendOTPEmail
-};

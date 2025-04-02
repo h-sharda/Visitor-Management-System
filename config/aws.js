@@ -1,6 +1,8 @@
-const { S3Client } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-require('dotenv').config();
+import { S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Configure AWS
 const s3Client = new S3Client({
@@ -11,4 +13,4 @@ const s3Client = new S3Client({
   }
 });
 
-module.exports = { s3Client, getSignedUrl };
+export { s3Client, getSignedUrl };

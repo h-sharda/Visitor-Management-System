@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const entrySchema = new mongoose.Schema({
   timestamp: { 
@@ -15,4 +15,4 @@ const entrySchema = new mongoose.Schema({
   }
 }, { collection: 'vehicle-entries' });
 
-module.exports = mongoose.model('Entry', entrySchema);
+export default mongoose.model('Entry', entrySchema);

@@ -1,13 +1,22 @@
-const express = require('express');
-const path = require('path');
-require('dotenv').config();
-require('./config/mongodb');
-const cookieParser = require('cookie-parser');
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
-const { checkForAuthenticationCookie } = require('./middlewares/authMiddleware');
+import './config/mongodb.js';
+import { checkForAuthenticationCookie } from './middlewares/authMiddleware.js';
+import userRoute from './routes/userRoutes.js';
+import entryRoutes from './routes/entryRoutes.js';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Get __dirname equivalent in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(express.json());
@@ -17,10 +26,7 @@ app.use(checkForAuthenticationCookie('token'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-const userRoute = require("./routes/userRoutes");
 app.use('/user', userRoute);
-
-const entryRoutes = require('./routes/entryRoutes');
 app.use('/', entryRoutes);
 
 // Serve the main page

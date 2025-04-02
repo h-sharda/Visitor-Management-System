@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 const extractNumberPlate = async (signedUrl) => {
   try {
@@ -13,4 +13,4 @@ const extractNumberPlate = async (signedUrl) => {
   }
 };
 
-module.exports = extractNumberPlate;
+export default extractNumberPlate;

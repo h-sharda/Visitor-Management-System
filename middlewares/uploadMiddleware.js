@@ -1,4 +1,4 @@
-const multer = require('multer');
+import multer from 'multer';
 
 // Multer upload configuration
 const upload = multer({
@@ -17,7 +17,7 @@ const upload = multer({
 });
 
 // Multer error handler middleware
-const multerErrorHandler = (err, req, res, next) => {
+export const multerErrorHandler = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     return res.status(400).json({ error: 'File upload error: ' + err.message });
   } else if (err) {
@@ -26,4 +26,4 @@ const multerErrorHandler = (err, req, res, next) => {
   next();
 };
 
-module.exports = { upload, multerErrorHandler };
+export { upload };

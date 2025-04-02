@@ -1,18 +1,19 @@
-const express = require('express');
+import express from 'express';
+import { getEntries, updateEntryNumber, deleteEntry, createEntry} from '../controllers/entryController.js';
+import { upload, multerErrorHandler } from '../middlewares/uploadMiddleware.js';
+
 const router = express.Router();
-const entryController = require('../controllers/entryController');
-const { upload, multerErrorHandler } = require('../middlewares/uploadMiddleware');
 
 const isAuthenticated = (req, res, next) => {
   if (req.user) {
-      return next();
+    return next();
   }
   return res.status(401).json({ message: 'Authentication required' });
-};  
+};
 
-router.get('/entries', isAuthenticated, entryController.getEntries);
-router.put('/entries/:id', isAuthenticated, entryController.updateEntryNumber);
-router.delete('/entries/:id', isAuthenticated, entryController.deleteEntry);
-router.post('/upload', isAuthenticated, upload.single('entry'), entryController.createEntry, multerErrorHandler);
+router.get('/entries', isAuthenticated, getEntries);
+router.put('/entries/:id', isAuthenticated, updateEntryNumber);
+router.delete('/entries/:id', isAuthenticated, deleteEntry);
+router.post('/upload', isAuthenticated, upload.single('entry'), createEntry, multerErrorHandler);
 
-module.exports = router;
+export default router;

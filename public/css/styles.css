@@ -1,0 +1,44 @@
+/* Additional styles for the application */
+.max-h-10vh {
+    max-height: 10vh;
+}
+
+.expanded-image-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.expanded-image {
+    max-height: 60%;
+    object-fit: contain;
+}
+
+.close-button {
+    position: fixed;
+    top: 4px;
+    right: 4px;
+    background-color: white;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.close-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Add responsive container width */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 80vw;
+    }
+}

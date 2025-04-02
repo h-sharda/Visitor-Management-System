@@ -1,11 +1,11 @@
-const User = require("../models/User"); // Assuming you have a User model
+const User = require("../models/User"); 
 
 const createUser = async (req, res) => {
   try {
     const { name, email, role } = req.body;
 
-    if (!name || !email || !role) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!email || !role) {
+      return res.status(400).json({ message: "email and role are required" });
     }
 
     // Check if user already exists

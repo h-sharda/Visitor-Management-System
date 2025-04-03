@@ -1,7 +1,5 @@
 // Render image viewer container
 export function renderImageViewer() {
-    const container = document.getElementById('expandedImageContainer');
-    
     // Nothing to render initially, just set up the global function for image expansion
     window.expandImage = expandImage;
     window.collapseImage = collapseImage;

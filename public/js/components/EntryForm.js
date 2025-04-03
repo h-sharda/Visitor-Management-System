@@ -23,7 +23,8 @@ export function renderEntryForm() {
                 </div>
                 <button 
                     type="submit" 
-                    class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
+                    id="uploadButton"
+                    class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out btn-press-effect"
                 >
                     Upload Image
                 </button>
@@ -35,9 +36,17 @@ export function renderEntryForm() {
     document.getElementById('uploadForm').addEventListener('submit', handleFormSubmit);
 }
 
-// Handle form submission
+// Handle form submission with button state management
 async function handleFormSubmit(e) {
     e.preventDefault();
+    
+    const uploadButton = document.getElementById('uploadButton');
+    const originalText = uploadButton.textContent;
+    
+    // Show loading state
+    uploadButton.textContent = 'Uploading...';
+    uploadButton.disabled = true;
+    uploadButton.classList.add('opacity-75');
     
     const formData = new FormData(e.target);
 
@@ -52,9 +61,17 @@ async function handleFormSubmit(e) {
             
             // Clear the file input
             document.getElementById('fileInput').value = '';
+            
+            // Success feedback
+            alert('Entry uploaded successfully');
         }
     } catch (error) {
         console.error('Upload error:', error);
         alert('Failed to upload entry. Please try again.');
+    } finally {
+        // Restore button state
+        uploadButton.textContent = originalText;
+        uploadButton.disabled = false;
+        uploadButton.classList.remove('opacity-75');
     }
 }

@@ -42,38 +42,48 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
+    // Get submit button and show loading state
+    const submitButton = this.querySelector('button[type="submit"]');
+    const originalText = submitButton.textContent;
+    submitButton.textContent = 'Sending...';
+    submitButton.disabled = true;
+    
     try {
-      const response = await fetch('/user/request-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email })
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        if (response.status === 429) {
-          // Handle rate limiting (cooldown period)
-          const match = data.message.match(/Please wait (\d+) minute/);
-          if (match && match[1]) {
-            startCooldownTimer(parseInt(match[1]));
-          }
+        const response = await fetch('/user/request-otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            if (response.status === 429) {
+                // Handle rate limiting (cooldown period)
+                const match = data.message.match(/Please wait (\d+) minute/);
+                if (match && match[1]) {
+                    startCooldownTimer(parseInt(match[1]));
+                }
+            }
+            throw new Error(data.message || 'Failed to request OTP');
         }
-        throw new Error(data.message || 'Failed to request OTP');
-      }
-      
-      // Show OTP section on success
-      showSuccess(data.message);
-      otpSection.style.display = 'block';
-      startExpiryTimer();
-      
-      // Focus on OTP input
-      document.getElementById('otp').focus();
-      
+        
+        // Show OTP section on success
+        showSuccess(data.message);
+        otpSection.style.display = 'block';
+        startExpiryTimer();
+        
+        // Focus on OTP input
+        document.getElementById('otp').focus();
+        
     } catch (error) {
-      showError(error.message);
+        showError(error.message);
+    } finally {
+        // Restore button state
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
     }
   });
   

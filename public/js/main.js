@@ -1,15 +1,12 @@
 import { renderAuthUI } from './components/AuthUI.js';
 import { renderEntryForm } from './components/EntryForm.js';
-import { renderUserForm } from './components/UserForm.js';
 import { renderEntryTable } from './components/EntryTable.js';
 import { renderImageViewer } from './components/ImageViewer.js';
 import { renderUpdateModal } from './components/UpdateModal.js';
 import { renderDeleteModal } from './components/DeleteModal.js';
 import { checkAuthState } from './utils/auth.js';
 import { hasPermission } from './utils/permissions.js';
-
-// Global variables
-export let currentUser = null;
+import { currentUser, setCurrentUser } from './utils/state.js';
 
 // Initialize application
 document.addEventListener('DOMContentLoaded', async function() {
@@ -31,7 +28,9 @@ async function initializeApp() {
     try {
         // Check authentication state
         const authResult = await checkAuthState();
-        currentUser = authResult.user;
+        setCurrentUser(authResult.user);
+
+        console.log(currentUser);
         
         // Render authentication UI
         renderAuthUI(authResult.authenticated, currentUser);
@@ -64,14 +63,4 @@ async function loadComponentsByPermission() {
     if (hasPermission(currentUser, ['OPERATOR', 'ADMIN'])) {
         renderEntryForm();
     }
-    
-    // Render user form for ADMIN only
-    if (hasPermission(currentUser, ['ADMIN'])) {
-        renderUserForm();
-    }
-}
-
-// Re-export functions needed by other components
-export function updateCurrentUser(user) {
-    currentUser = user;
 }

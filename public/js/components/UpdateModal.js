@@ -1,7 +1,7 @@
-import { updateEntryNumber } from '../utils/api.js';
 import { updateEntryNumberInUI } from './EntryTable.js';
-import { currentUser } from '../main.js';
+import { updateEntryNumber } from '../utils/api.js';
 import { canManageEntries } from '../utils/permissions.js';
+import { currentUser } from '../utils/state.js';
 
 let currentEntryIdForUpdate = null;
 
@@ -22,13 +22,13 @@ export function renderUpdateModal() {
                 <div class="flex justify-end space-x-2">
                     <button 
                         id="cancelUpdateBtn" 
-                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 btn-press-effect"
                     >
                         Cancel
                     </button>
                     <button 
                         id="confirmUpdateBtn" 
-                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 btn-press-effect"
                     >
                         Update
                     </button>

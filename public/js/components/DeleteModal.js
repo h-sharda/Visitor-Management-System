@@ -1,6 +1,6 @@
 import { removeEntryFromUI } from './EntryTable.js';
 import { deleteEntry } from '../utils/api.js';
-import { currentUser } from '../main.js';
+import { currentUser } from '../utils/state.js';
 import { canManageEntries } from '../utils/permissions.js';
 
 let currentEntryIdForDelete = null;
@@ -17,13 +17,13 @@ export function renderDeleteModal() {
                 <div class="flex justify-end space-x-2">
                     <button 
                         id="cancelDeleteBtn" 
-                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 btn-press-effect"
                     >
                         Cancel
                     </button>
                     <button 
                         id="confirmDeleteBtn" 
-                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 btn-press-effect"
                     >
                         Delete
                     </button>
@@ -31,6 +31,7 @@ export function renderDeleteModal() {
             </div>
         </div>
     `;
+
     
     // Add event listeners
     document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);

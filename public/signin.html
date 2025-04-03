@@ -22,7 +22,8 @@
           <input type="email" class="form-control" id="email" required>
           <div class="form-text">We'll send a one-time password to this email.</div>
         </div>
-        <button type="submit" class="btn btn-primary">Request OTP</button>
+        <!-- Update buttons in signin.html -->
+        <button type="submit" class="btn btn-primary btn-press-effect">Request OTP</button>
         <div class="timer" id="cooldownTimer">Please wait <span id="timeLeft">0</span> before requesting a new OTP</div>
       </form>
       
@@ -33,7 +34,7 @@
           <input type="text" class="form-control" id="otp" required pattern="[0-9]{6}" maxlength="6">
           <div class="form-text">Enter the 6-digit code sent to your email.</div>
         </div>
-        <button type="submit" class="btn btn-primary">Verify</button>
+        <button type="submit" class="btn btn-primary btn-press-effect">Verify</button>
         <div class="timer" id="expiryTimer">OTP expires in <span id="expiryTimeLeft">10:00</span></div>
       </form>
     </div>

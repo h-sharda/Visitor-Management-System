@@ -17,8 +17,6 @@ async function connectToDatabase() {
   }
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000, // Reduce timeout to fail fast
       socketTimeoutMS: 45000, // Prevent disconnections
       maxPoolSize: 10, // Allow connection reuse

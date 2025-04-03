@@ -17,9 +17,8 @@ async function connectToDatabase() {
   }
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGO_URI, {
-      serverSelectionTimeoutMS: 5000, // Reduce timeout to fail fast
-      socketTimeoutMS: 45000, // Prevent disconnections
-      maxPoolSize: 10, // Allow connection reuse
+      serverSelectionTimeoutMS: 5000,
+      maxPoolSize: 10, 
     });
   }
   cached.conn = await cached.promise;

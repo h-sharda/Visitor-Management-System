@@ -38,6 +38,10 @@ app.get('/signin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'signin.html'));
 });
 
+app.get('/user-management', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'user-management.html'));
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

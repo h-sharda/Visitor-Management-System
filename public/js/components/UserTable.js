@@ -1,4 +1,4 @@
-import { fetchUsers, deleteUser } from '../utils/api.js';
+import { fetchUsers, deleteUser, updateUser } from '../utils/api.js';
 
 // Render users table
 export async function renderUsersTable() {
@@ -58,9 +58,13 @@ export async function renderUsersTable() {
                     <div class="text-sm text-gray-500">${user.email}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-${getRoleColor(user.role)}-100 text-${getRoleColor(user.role)}-800">
-                        ${user.role}
-                    </span>
+                    <select class="role-dropdown rounded text-sm border border-gray-300 px-2 py-1 bg-${getRoleColor(user.role)}-100 text-${getRoleColor(user.role)}-800" 
+                            data-user-id="${user._id}" 
+                            data-original-role="${user.role}">
+                        <option value="ADMIN" ${user.role === 'ADMIN' ? 'selected' : ''}>ADMIN</option>
+                        <option value="OPERATOR" ${user.role === 'OPERATOR' ? 'selected' : ''}>OPERATOR</option>
+                        <option value="VIEWER" ${user.role === 'VIEWER' ? 'selected' : ''}>VIEWER</option>
+                    </select>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                     <button class="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-100 btn-press-effect" onclick="window.deleteUserConfirm('${user._id}')">
@@ -77,6 +81,11 @@ export async function renderUsersTable() {
         table.appendChild(tbody);
         tableWrapper.appendChild(table);
         tableContainer.appendChild(tableWrapper);
+        
+        // Add event listeners for role dropdowns
+        document.querySelectorAll('.role-dropdown').forEach(dropdown => {
+            dropdown.addEventListener('change', handleRoleChange);
+        });
         
         // Set up delete user function
         window.deleteUserConfirm = deleteUserConfirm;
@@ -120,11 +129,112 @@ function deleteUserConfirm(userId) {
                     if (!tbody || !tbody.querySelector('tr')) {
                         document.getElementById('noUsersMessage').classList.remove('hidden');
                     }
+                    
+                    showNotification('User deleted successfully', 'success');
                 }
             })
             .catch(error => {
                 console.error('Error deleting user:', error);
-                alert('Failed to delete user. Please try again.');
+                showNotification('Failed to delete user', 'error');
             });
     }
+}
+
+// Handle role change
+async function handleRoleChange(event) {
+    const dropdown = event.target;
+    const userId = dropdown.dataset.userId;
+    const newRole = dropdown.value;
+    const originalRole = dropdown.dataset.originalRole;
+    
+    try {
+        // Show loading state
+        dropdown.disabled = true;
+        dropdown.classList.add('opacity-50');
+        
+        // Call API to update user role
+        const result = await updateUser(userId, { role: newRole });
+        
+        if (result) {
+            // Update was successful
+            dropdown.dataset.originalRole = newRole;
+            
+            // Update the dropdown background color
+            const oldColorClass = `bg-${getRoleColor(originalRole)}-100`;
+            const newColorClass = `bg-${getRoleColor(newRole)}-100`;
+            dropdown.classList.remove(oldColorClass);
+            dropdown.classList.add(newColorClass);
+            
+            // Update the dropdown text color
+            const oldTextColorClass = `text-${getRoleColor(originalRole)}-800`;
+            const newTextColorClass = `text-${getRoleColor(newRole)}-800`;
+            dropdown.classList.remove(oldTextColorClass);
+            dropdown.classList.add(newTextColorClass);
+            
+            // Show success message
+            showNotification('User role updated successfully', 'success');
+        } else {
+            // Revert to original value if update failed
+            dropdown.value = originalRole;
+            showNotification('Failed to update user role', 'error');
+        }
+    } catch (error) {
+        console.error('Error updating user role:', error);
+        // Revert to original value
+        dropdown.value = originalRole;
+        showNotification('Failed to update user role', 'error');
+    } finally {
+        // Remove loading state
+        dropdown.disabled = false;
+        dropdown.classList.remove('opacity-50');
+    }
+}
+
+// Show notification message
+function showNotification(message, type = 'success') {
+    // Check if notification container exists, if not create it
+    let notificationContainer = document.getElementById('notificationContainer');
+    if (!notificationContainer) {
+        notificationContainer = document.createElement('div');
+        notificationContainer.id = 'notificationContainer';
+        notificationContainer.className = 'fixed top-4 right-4 z-50';
+        document.body.appendChild(notificationContainer);
+    }
+    
+    // Create notification
+    const notification = document.createElement('div');
+    notification.className = `mb-4 p-3 rounded shadow-md transition-all duration-300 transform translate-x-full ${
+        type === 'success' ? 'bg-green-100 text-green-800 border-l-4 border-green-500' :
+        'bg-red-100 text-red-800 border-l-4 border-red-500'
+    }`;
+    
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                ${type === 'success' ? 
+                    '<svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>' :
+                    '<svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>'
+                }
+            </div>
+            <div class="ml-3">
+                <p class="text-sm">${message}</p>
+            </div>
+        </div>
+    `;
+    
+    // Add to container
+    notificationContainer.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.classList.remove('translate-x-full');
+    }, 10);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.add('opacity-0');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
 }

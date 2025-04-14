@@ -26,8 +26,8 @@ app.use(checkForAuthenticationCookie("token"));
 app.use(express.static(path.join(__dirname, "frontend/dist")));
 
 // Routes
-app.use("/user", userRoute);
-app.use("/", entryRoutes);
+app.use("/api/users", userRoute);
+app.use("/api/entries", entryRoutes);
 
 // Serve the main page
 app.get(/.*/, (req, res) => {

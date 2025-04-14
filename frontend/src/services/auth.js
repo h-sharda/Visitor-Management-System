@@ -7,7 +7,7 @@ const api = axios.create({
 // Check authentication state
 export async function checkAuthState() {
   try {
-    const response = await api.get("/user/check-auth");
+    const response = await api.get("api/users/check-auth");
     return {
       authenticated: response.data.authenticated,
       user: response.data.authenticated ? response.data.user : null,
@@ -24,7 +24,7 @@ export async function checkAuthState() {
 // Request OTP
 export async function requestOTP(email) {
   try {
-    const response = await api.post("/user/request-otp", { email });
+    const response = await api.post("api/users/request-otp", { email });
     return response.data;
   } catch (error) {
     console.error("Error in requesting OTP:", error);
@@ -35,7 +35,7 @@ export async function requestOTP(email) {
 // Verify OTP
 export async function verifyOTP(email, otp) {
   try {
-    const response = await api.post("/user/verify-otp", { email, otp });
+    const response = await api.post("api/users/verify-otp", { email, otp });
     return response.data;
   } catch (error) {
     console.error("Error in OTP verification:", error);
@@ -46,7 +46,7 @@ export async function verifyOTP(email, otp) {
 // Logout function
 export async function logout() {
   try {
-    await api.get("/user/logout");
+    await api.get("api/users/logout");
     return true;
   } catch (error) {
     console.error("Logout error:", error);

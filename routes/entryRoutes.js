@@ -16,11 +16,11 @@ const isAuthenticated = (req, res, next) => {
   return res.status(401).json({ message: "Authentication required" });
 };
 
-router.get("/entries", isAuthenticated, getEntries);
-router.put("/entries/:id", isAuthenticated, updateEntryNumber);
-router.delete("/entries/:id", isAuthenticated, deleteEntry);
+router.get("/get-all", isAuthenticated, getEntries);
+router.put("/:id", isAuthenticated, updateEntryNumber);
+router.delete("/:id", isAuthenticated, deleteEntry);
 router.post(
-  "/upload",
+  "/create",
   isAuthenticated,
   upload.single("entry"),
   createEntry,

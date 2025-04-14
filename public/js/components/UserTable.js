@@ -86,11 +86,7 @@ export async function renderUsersTable() {
         // Add event listeners for role dropdowns
         document.querySelectorAll('.role-dropdown').forEach(dropdown => {
             dropdown.addEventListener('change', handleRoleChange);
-        });
-        
-        // Set up delete user function
-        window.deleteUserConfirm = deleteUserConfirm;
-        
+        });        
     } catch (error) {
         console.error('Error rendering users table:', error);
         const tableContainer = document.getElementById('usersTable');
@@ -117,7 +113,7 @@ function getRoleColor(role) {
 }
 
 // Delete user confirmation
-function deleteUserConfirm(userId) {
+window.deleteUserConfirm = function (userId) {
     if (confirm('Are you sure you want to delete this user?')) {
         deleteUser(userId).then(response => {
             if (response) {

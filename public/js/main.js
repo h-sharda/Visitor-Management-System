@@ -2,8 +2,6 @@ import { renderAuthUI } from './components/AuthUI.js';
 import { renderEntryForm } from './components/EntryForm.js';
 import { renderEntryTable } from './components/EntryTable.js';
 import { renderImageViewer } from './components/ImageViewer.js';
-import { renderUpdateModal } from './components/UpdateModal.js';
-import { renderDeleteModal } from './components/DeleteModal.js';
 import { checkAuthState } from './utils/auth.js';
 import { hasPermission } from './utils/permissions.js';
 import { currentUser, setCurrentUser } from './utils/state.js';
@@ -12,8 +10,6 @@ import { currentUser, setCurrentUser } from './utils/state.js';
 document.addEventListener('DOMContentLoaded', async function() {
     // Set up modals and components that don't depend on auth state
     renderImageViewer();
-    renderUpdateModal();
-    renderDeleteModal();
     
     // Check authentication
     await initializeApp();
@@ -29,7 +25,6 @@ async function initializeApp() {
         // Check authentication state
         const authResult = await checkAuthState();
         setCurrentUser(authResult.user);
-
         console.log(currentUser);
         
         // Render authentication UI

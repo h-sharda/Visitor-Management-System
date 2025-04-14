@@ -1,52 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vehicle Management System NSUT</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="/css/styles.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 min-h-screen">
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link href="/css/styles.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-100 min-h-screen">
     <!-- Navigation Bar -->
     <nav class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="text-xl font-bold">Vehicle Management System NSUT</div>
-            <div id="authSection" class="flex items-center space-x-4">
-                <!-- Auth content will be loaded by AuthUI.js -->
-                <span id="loadingAuth">Loading...</span>
-            </div>
+      <div
+        class="container mx-auto px-4 py-3 flex justify-between items-center"
+      >
+        <div class="text-xl font-bold">Vehicle Management System NSUT</div>
+        <div id="authSection" class="flex items-center space-x-4">
+          <!-- Auth content will be loaded by AuthUI.js -->
+          <span id="loadingAuth">Loading...</span>
         </div>
+      </div>
     </nav>
 
     <!-- Authentication Required Message -->
-    <div id="authRequiredMessage" class="hidden container mx-auto mt-20 px-4 py-8 text-center">
-        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow">
-            <p class="font-bold">Authentication Required</p>
-            <p>Please sign in to view vehicle entries.</p>
-            <button id="goToSignIn" class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                Sign In
-            </button>
-        </div>
+    <div
+      id="authRequiredMessage"
+      class="hidden container mx-auto mt-20 px-4 py-8 text-center"
+    >
+      <div
+        class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow"
+      >
+        <p class="font-bold">Authentication Required</p>
+        <p>Please sign in to view vehicle entries.</p>
+        <button
+          id="goToSignIn"
+          class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          Sign In
+        </button>
+      </div>
     </div>
 
     <!-- Main Content Container - initially hidden -->
     <div id="mainContent" class="container mx-auto px-4 py-8 hidden">
-        <!-- Components will be loaded here by JavaScript -->
-        <div id="entryFormContainer"></div>
-        <div id="userFormContainer"></div>
-        <div id="vehicleEntryTable" class="bg-white shadow-lg rounded-lg overflow-hidden mb-8"></div>
-        <div id="noEntriesMessage" class="text-center text-gray-500 mt-8 hidden">
-            No entries uploaded yet.
-        </div>
+      <!-- Components will be loaded here by JavaScript -->
+      <div id="entryFormContainer"></div>
+      <div id="userFormContainer"></div>
+      <div
+        id="vehicleEntryTable"
+        class="bg-white shadow-lg rounded-lg overflow-hidden mb-8"
+      ></div>
+      <div id="noEntriesMessage" class="text-center text-gray-500 mt-8 hidden">
+        No entries uploaded yet.
+      </div>
     </div>
 
-    <!-- Modal Containers - initially hidden -->
+    <!-- Image Expander - initially hidden -->
     <div id="expandedImageContainer" class="hidden"></div>
-    <div id="updateModalContainer" class="hidden"></div>
-    <div id="deleteModalContainer" class="hidden"></div>
 
     <!-- Load our modules -->
     <script type="module" src="/js/main.js"></script>
-</body>
+  </body>
 </html>

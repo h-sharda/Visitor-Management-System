@@ -1,6 +1,7 @@
-import { fetchEntries } from "../utils/api.js";
+import { fetchEntries, updateEntryNumber, deleteEntry } from "../utils/api.js";
 import { currentUser } from "../utils/state.js";
 import { canManageEntries } from "../utils/permissions.js";
+import { showNotification } from "../utils/notifications.js";
 
 let entries = [];
 let currentPage = 1;
@@ -26,9 +27,9 @@ export async function renderEntryTable() {
     loadingIndicator.id = "loadingIndicator";
     loadingIndicator.className = "text-center py-4";
     loadingIndicator.innerHTML = `
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-            <p class="mt-2 text-gray-600">Loading entries...</p>
-        `;
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      <p class="mt-2 text-gray-600">Loading entries...</p>
+    `;
     entryContainer.appendChild(loadingIndicator);
 
     // Fetch initial entries from API
@@ -40,10 +41,10 @@ export async function renderEntryTable() {
     console.error("Error rendering entry table:", error);
     const entryContainer = document.getElementById("vehicleEntryTable");
     entryContainer.innerHTML = `
-            <div class="px-6 py-4 text-center text-red-500">
-                Failed to load entries. Please try again later.
-            </div>
-        `;
+      <div class="px-6 py-4 text-center text-red-500">
+        Failed to load entries. Please try again later.
+      </div>
+    `;
   }
 }
 
@@ -59,7 +60,7 @@ async function loadMoreEntries() {
     if (loadingIndicator) {
       loadingIndicator.classList.remove("hidden");
     }
-      
+
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Fetch entries from API
@@ -105,13 +106,13 @@ async function loadMoreEntries() {
       newLoadingIndicator.id = "loadingIndicator";
       newLoadingIndicator.className = "text-center py-4";
       newLoadingIndicator.innerHTML = `
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-                <p class="mt-2 text-gray-600">
-                    <button id="loadMoreButton" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors">
-                        Load More
-                    </button>
-                </p>
-            `;
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        <p class="mt-2 text-gray-600">
+          <button id="loadMoreButton" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors">
+            Load More
+          </button>
+        </p>
+      `;
       entryContainer.appendChild(newLoadingIndicator);
 
       // Add click event listener to the button (fallback for mobile)
@@ -190,12 +191,12 @@ function appendEntriesByDate(entriesByDate, container) {
       const thead = document.createElement("thead");
       thead.className = "bg-gray-200";
       thead.innerHTML = `
-                <tr>
-                    <th scope="col" class="px-6 py-3 text-center text-gray-500 uppercase tracking-wider" style="font-size: 14px;">Time</th>
-                    <th scope="col" class="px-6 py-3 text-center text-gray-500 uppercase tracking-wider" style="font-size: 14px;">Vehicle Number</th>
-                    <th scope="col" class="px-6 py-3 text-center text-gray-500 uppercase tracking-wider" style="font-size: 14px;">Image</th>
-                </tr>
-            `;
+        <tr>
+          <th scope="col" class="px-6 py-3 text-center text-gray-500 uppercase tracking-wider" style="font-size: 14px;">Time</th>
+          <th scope="col" class="px-6 py-3 text-center text-gray-500 uppercase tracking-wider" style="font-size: 14px;">Vehicle Number</th>
+          <th scope="col" class="px-6 py-3 text-center text-gray-500 uppercase tracking-wider" style="font-size: 14px;">Image</th>
+        </tr>
+      `;
       table.appendChild(thead);
 
       const tbody = document.createElement("tbody");
@@ -226,44 +227,112 @@ function appendEntriesByDate(entriesByDate, container) {
       row.innerHTML = `
         <td class="px-6 py-4 whitespace-nowrap text-center text-gray-900 text-base font-medium" data-label="Time">
           ${formattedTime}
-          ${canEdit ? `
+          ${
+            canEdit
+              ? `
             <div class="mt-2">
-              <button class="delete-button text-red-600 hover:text-red-800 hover:bg-red-100 p-1.5 rounded-full btn-press-effect" title="Delete entry" onclick="window.openDeleteModal('${entry._id}')">
+              <button class="delete-button text-red-600 hover:text-red-800 hover:bg-red-100 p-1.5 rounded-full btn-press-effect" title="Delete entry" onclick="window.deleteEntryConfirm('${entry._id}')">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                 </svg>
               </button>
             </div>
-          ` : ""
+          `
+              : ""
           }
         </td>
         
         <td class="px-6 py-4 whitespace-nowrap text-center" data-label="Vehicle Number">
-          <div class="flex items-center justify-center space-x-2">
-            <span id="number-${entry._id}" class="text-base font-medium text-gray-900">
-            ${entry.number}</span>
-            ${canEdit? `
-              <button class="hover:bg-blue-100 p-1 rounded-full btn-press-effect" title="Edit vehicle number" onclick="window.openUpdateModal('${entry._id}')">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500 hover:text-blue-700" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                  </svg>
-              </button>
-            ` : ""}
-          </div>
+          ${
+            canEdit
+              ? `
+            <div class="relative inline-block">
+              <input 
+                type="text" 
+                class="entry-number-input text-base font-medium text-center border border-gray-300 rounded-md py-1 px-2 w-36"
+                value="${entry.number || ""}"
+                data-entry-id="${entry._id}"
+                data-original-value="${entry.number || ""}"
+                placeholder="Enter number"
+              />
+            </div>
+          `
+              : `<span class="text-base font-medium text-gray-900">${
+                  entry.number || "Not specified"
+                }</span>`
+          }
         </td>
         <td class="px-6 py-4 text-center relative image-cell">
           <div class="image-container">
-            <img src="${entry.signedUrl}" class="max-h-10vh object-contain rounded-md cursor-pointer mx-auto" alt="Vehicle Image" onclick="window.expandImage('${entry.signedUrl}')">
+            <img src="${
+              entry.signedUrl
+            }" class="max-h-10vh object-contain rounded-md cursor-pointer mx-auto" alt="Vehicle Image" onclick="window.expandImage('${
+        entry.signedUrl
+      }')">
           </div>
         </td>
       `;
 
       tbody.appendChild(row);
     });
+
+    // Add event listeners for inline number editing
+    if (canManageEntries(currentUser)) {
+      dateTable.querySelectorAll(".entry-number-input").forEach((input) => {
+        // Save on blur
+        input.addEventListener("blur", handleNumberUpdate);
+
+        // Save on Enter key
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            input.blur();
+          }
+        });
+      });
+    }
   });
 }
 
-// Group entries by date (keeping your original function)
+// Handle number update
+async function handleNumberUpdate(event) {
+  const input = event.target;
+  const entryId = input.dataset.entryId;
+  const newNumber = input.value.trim();
+  const originalValue = input.dataset.originalValue;
+
+  // If value hasn't changed, do nothing
+  if (newNumber === originalValue) return;
+
+  try {
+    // Show loading state
+    input.disabled = true;
+    input.classList.add("opacity-50");
+
+    // Call API to update entry number
+    const response = await updateEntryNumber(entryId, newNumber);
+
+    if (response) {
+      // Update was successful
+      input.dataset.originalValue = newNumber;
+      showNotification("Vehicle number updated successfully", "success");
+    } else {
+      // Revert to original value
+      input.value = originalValue;
+      showNotification("Failed to update vehicle number", "error");
+    }
+  } catch (error) {
+    console.error("Error updating vehicle number:", error);
+    // Revert to original value
+    input.value = originalValue;
+    showNotification("Failed to update vehicle number", "error");
+  } finally {
+    // Remove loading state
+    input.disabled = false;
+    input.classList.remove("opacity-50");
+  }
+}
+
+// Group entries by date
 function groupEntriesByDate(entries) {
   return entries.reduce((acc, entry) => {
     const entryDate = new Date(entry.timestamp);
@@ -276,32 +345,35 @@ function groupEntriesByDate(entries) {
   }, {});
 }
 
-// Function to update entry number in the UI (keeping your original function)
-export function updateEntryNumberInUI(entryId, newNumber) {
-  const numberElement = document.getElementById(`number-${entryId}`);
-  if (numberElement) {
-    numberElement.textContent = newNumber || "Not specified";
-  }
-}
-
-// Function to remove entry row from the UI (keeping your original function)
-export function removeEntryFromUI(entryId) {
-  const rowToRemove = document.querySelector(`tr[data-entry-id="${entryId}"]`);
-  if (rowToRemove) {
-    rowToRemove.remove();
-  }
-
-  // Check if the table is now empty
-  const entryTable = document.getElementById("vehicleEntryTable");
-  if (!entryTable.querySelector("tr[data-entry-id]")) {
-    document.getElementById("noEntriesMessage").classList.remove("hidden");
-  }
-}
-
 // Clean up observer when component unmounts
 export function cleanup() {
   if (observer) {
     observer.disconnect();
     observer = null;
+  }
+}
+
+// Create the delete entry confirmation function
+window.deleteEntryConfirm = function (entryId) {
+
+  if (confirm('Are you sure you want to delete this entry?')) {
+    deleteEntry(entryId).then(response => {
+      if (response) {
+        // Remove entry from the table
+        document.querySelector(`tr[data-entry-id="${entryId}"]`).remove();
+              
+        // Check if table is now empty
+        const tbody = document.querySelector("#vehicleEntryTable tbody");
+        if (!tbody || !tbody.querySelector('tr')) {
+          document.getElementById('noEntriesMessage').classList.remove('hidden');
+        }
+              
+        showNotification('Entry deleted successfully', 'success');
+      }
+    })
+      .catch(error => {
+        console.error('Error deleting entry:', error);
+        showNotification('Failed to delete entry', 'error');
+      });
   }
 }

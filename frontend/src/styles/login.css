@@ -1,0 +1,32 @@
+.auth-container {
+  max-width: 450px;
+  margin: 80px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.btn-press-effect {
+  position: relative;
+  transition: transform 0.1s, box-shadow 0.1s, border 0.1s;
+}
+
+.btn-press-effect:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.5) !important;
+  border: 2px solid #0d6efd;
+}
+
+.timer {
+  font-size: 14px;
+  color: #6c757d;
+  text-align: center;
+  margin-top: 10px;
+}

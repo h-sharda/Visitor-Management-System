@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Additional styles for the application */
+.max-h-10vh {
+  max-height: 10vh;
+}
+
+.expanded-image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.expanded-image {
+  max-height: 60%;
+  object-fit: contain;
+}
+
+.close-button {
+  position: fixed;
+  top: 4px;
+  right: 4px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.close-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Button press effect */
+.btn-press-effect {
+  position: relative;
+  transition: transform 0.1s, box-shadow 0.1s, border 0.1s;
+}
+
+.btn-press-effect:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5) !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Button loading state */
+.btn-loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Add responsive container width */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 80vw;
+  }
+}
+
+/* Responsive table styles for mobile */
+@media (max-width: 767px) {
+  .responsive-table thead {
+    display: none; /* Hide header on mobile */
+  }
+
+  .responsive-table tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .responsive-table td {
+    display: block;
+    text-align: right;
+    position: relative;
+    padding: 0.75rem 0.75rem 0.75rem 35%;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .responsive-table td:last-child {
+    border-bottom: none;
+  }
+
+  .responsive-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0.75rem;
+    width: 30%;
+    padding-right: 0.75rem;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  /* Fix image cell spacing for mobile */
+  .responsive-table td.image-cell {
+    padding: 0.75rem;
+    text-align: center;
+  }
+
+  /* Fix delete button and image overlap */
+  .responsive-table .image-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .responsive-table .delete-button {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+  }
+}

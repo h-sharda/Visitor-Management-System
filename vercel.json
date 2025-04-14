@@ -5,15 +5,7 @@
         "src": "server.js",
         "use": "@vercel/node"
       }
-    ],
-    "build": {
-      "env": {
-        "NODE_ENV": "production"
-      },
-      "commands": [
-        "cd frontend && npm install && npm run build"
-      ]
-    },    
+    ],   
     "routes": [
       {
         "src": "/(.*)",

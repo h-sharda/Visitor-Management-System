@@ -13,7 +13,7 @@ const router = express.Router();
 // ESP32-CAM Authentication middleware
 const authenticateESP32CAM = (req, res, next) => {
   const authToken = req.headers.authorization;
-  const validToken = process.env.ESP32_PASSWORD || "abc"; // Added fallback for testing
+  const validToken = process.env.ESP32_PASSWORD;
 
   if (!authToken || authToken !== validToken) {
     return res

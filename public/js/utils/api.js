@@ -96,7 +96,12 @@ export async function createUser(userData) {
             return null;
         }
 
-        return await response.json();
+        const data = await response.json();
+        return {
+            status : response.status,
+            data
+        }
+
     } catch (error) {
         console.error('Error creating user:', error);
         throw error;

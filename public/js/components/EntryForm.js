@@ -1,5 +1,6 @@
 import { uploadEntry } from '../utils/api.js';
 import { renderEntryTable } from './EntryTable.js';
+import { showNotification } from '../utils/notifications.js';
 
 // Render entry form
 export function renderEntryForm() {
@@ -63,11 +64,11 @@ async function handleFormSubmit(e) {
             document.getElementById('fileInput').value = '';
             
             // Success feedback
-            alert('Entry uploaded successfully');
+            showNotification('Entry uploaded successfully', 'success');
         }
     } catch (error) {
         console.error('Upload error:', error);
-        alert('Failed to upload entry. Please try again.');
+        showNotification('Failed to upload entry. Please try again.', 'error');
     } finally {
         // Restore button state
         uploadButton.textContent = originalText;

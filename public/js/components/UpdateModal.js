@@ -2,6 +2,7 @@ import { updateEntryNumberInUI } from './EntryTable.js';
 import { updateEntryNumber } from '../utils/api.js';
 import { canManageEntries } from '../utils/permissions.js';
 import { currentUser } from '../utils/state.js';
+import { showNotification } from "../utils/notifications.js";
 
 let currentEntryIdForUpdate = null;
 
@@ -61,7 +62,7 @@ export function renderUpdateModal() {
 function openUpdateModal(entryId) {
     // Check if user has permission
     if (!canManageEntries(currentUser)) {
-        alert('You do not have permission to edit entries');
+        showNotification('You do not have permission to edit entries', 'error');
         return;
     }
     
@@ -92,7 +93,7 @@ async function confirmUpdate() {
     
     // Check if user has permission
     if (!canManageEntries(currentUser)) {
-        alert('You do not have permission to edit entries');
+        showNotification("You do not have permission to edit entries", "error");
         closeUpdateModal();
         return;
     }
@@ -110,6 +111,6 @@ async function confirmUpdate() {
         }
     } catch (error) {
         console.error('Error updating number:', error);
-        alert('Failed to update number. Please try again.');
+        showNotification('Failed to update number. Please try again.', 'error');
     }
 }

@@ -2,6 +2,7 @@ import { removeEntryFromUI } from './EntryTable.js';
 import { deleteEntry } from '../utils/api.js';
 import { currentUser } from '../utils/state.js';
 import { canManageEntries } from '../utils/permissions.js';
+import { showNotification } from "../utils/notifications.js";
 
 let currentEntryIdForDelete = null;
 
@@ -50,7 +51,7 @@ export function renderDeleteModal() {
 function openDeleteModal(entryId) {
     // Check if user has permission
     if (!canManageEntries(currentUser)) {
-        alert('You do not have permission to delete entries');
+        showNotification('You do not have permission to delete entries', 'error');
         return;
     }
     
@@ -72,7 +73,7 @@ async function confirmDelete() {
     
     // Check if user has permission
     if (!canManageEntries(currentUser)) {
-        alert('You do not have permission to delete entries');
+        showNotification('You do not have permission to delete entries', 'error');
         closeDeleteModal();
         return;
     }
@@ -87,6 +88,6 @@ async function confirmDelete() {
         }
     } catch (error) {
         console.error('Error deleting entry:', error);
-        alert('Failed to delete entry. Please try again.');
+        showNotification('Failed to delete entry. Please try again.', 'error');
     }
 }

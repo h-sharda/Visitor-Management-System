@@ -1,4 +1,5 @@
 import { createUser } from '../utils/api.js';
+import { showNotification } from '../utils/notifications.js';
 
 // Render user form
 export function renderUserForm() {
@@ -57,20 +58,21 @@ async function handleUserFormSubmit(e) {
     
     // Only validate email since name is optional
     if (!email) {
-        alert("Email is required");
+        showNotification('Email is required', 'error');
         return;
     }
     
     try {
         const response = await createUser({ name, email, role });
-        
-        if (response && response.message) {
-            alert(response.message);
-            // Reset form on success
+        console.log(response);
+
+        if (response) {
+            const type = response.status == 201 ? 'success' : 'error';
+            showNotification(response.data.message, type);
             document.getElementById('createUserForm').reset();
         }
     } catch (error) {
         console.error('Error creating user:', error);
-        alert('Failed to create user. Please try again.');
+        showNotification('Failed to create user. Please try again.', 'error');
     }
 }

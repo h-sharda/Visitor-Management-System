@@ -1,3 +1,3 @@
 # Purpose
 
-This is initially made, then code was shifted to react and this is now unused
+This was initially made, then code was shifted to react and this is now unused

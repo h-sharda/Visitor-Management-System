@@ -119,25 +119,24 @@ function getRoleColor(role) {
 // Delete user confirmation
 function deleteUserConfirm(userId) {
     if (confirm('Are you sure you want to delete this user?')) {
-        deleteUser(userId)
-            .then(response => {
-                if (response) {
-                    // Remove user from the table
-                    document.querySelector(`tr[data-user-id="${userId}"]`).remove();
-                    
-                    // Check if table is now empty
-                    const tbody = document.querySelector('#usersTable tbody');
-                    if (!tbody || !tbody.querySelector('tr')) {
-                        document.getElementById('noUsersMessage').classList.remove('hidden');
-                    }
-                    
-                    showNotification('User deleted successfully', 'success');
+        deleteUser(userId).then(response => {
+            if (response) {
+                // Remove user from the table
+                document.querySelector(`tr[data-user-id="${userId}"]`).remove();
+                
+                // Check if table is now empty
+                const tbody = document.querySelector('#usersTable tbody');
+                if (!tbody || !tbody.querySelector('tr')) {
+                    document.getElementById('noUsersMessage').classList.remove('hidden');
                 }
-            })
-            .catch(error => {
-                console.error('Error deleting user:', error);
-                showNotification('Failed to delete user', 'error');
-            });
+                
+                showNotification('User deleted successfully', 'success');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting user:', error);
+            showNotification('Failed to delete user', 'error');
+        });
     }
 }
 

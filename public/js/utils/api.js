@@ -21,9 +21,9 @@ export async function uploadEntry(formData) {
 }
 
 // Fetch all entries
-export async function fetchEntries() {
+export async function fetchEntries(page = 1, limit = 5) {
     try {
-        const response = await fetch('/entries');
+        const response = await fetch(`/entries?page=${page}&limit=${limit}`);
         
         // Check if unauthorized
         if (response.status === 401) {

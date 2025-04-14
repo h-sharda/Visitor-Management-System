@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -18,14 +18,14 @@ async function connectToDatabase() {
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGO_URI);
   }
-  
+
   cached.conn = await cached.promise;
   return cached.conn;
 }
 
 // Immediately establish a connection when the module is imported
 connectToDatabase()
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 export { connectToDatabase };

@@ -1,11 +1,11 @@
-import { createUser } from '../utils/api.js';
-import { showNotification } from '../utils/notifications.js';
+import { createUser } from "../utils/api.js";
+import { showNotification } from "../utils/notifications.js";
 
 // Render user form
 export function renderUserForm() {
-    const container = document.getElementById('userFormContainer');
-    
-    container.innerHTML = `
+  const container = document.getElementById("userFormContainer");
+
+  container.innerHTML = `
         <div class="bg-white shadow-lg rounded-lg p-4 mb-8 mx-auto flex flex-col items-center justify-center">
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Create New User</h2>
             <form id="createUserForm" class="flex items-end space-x-4">
@@ -39,40 +39,42 @@ export function renderUserForm() {
             </form>
         </div>
     `;
-    
-    // Add event listener for form submission
-    document.getElementById('createUserForm').addEventListener('submit', handleUserFormSubmit);
+
+  // Add event listener for form submission
+  document
+    .getElementById("createUserForm")
+    .addEventListener("submit", handleUserFormSubmit);
 }
 
 // Handle user form submission
 async function handleUserFormSubmit(e) {
-    e.preventDefault();
-    
-    const nameInput = document.getElementById('newUserName');
-    const emailInput = document.getElementById('newUserEmail');
-    const roleInput = document.getElementById('newUserRole');
-    
-    const name = nameInput.value.trim();
-    const email = emailInput.value.trim().toLowerCase(); // Standardize email
-    const role = roleInput.value;
-    
-    // Only validate email since name is optional
-    if (!email) {
-        showNotification('Email is required', 'error');
-        return;
-    }
-    
-    try {
-        const response = await createUser({ name, email, role });
-        console.log(response);
+  e.preventDefault();
 
-        if (response) {
-            const type = response.status == 201 ? 'success' : 'error';
-            showNotification(response.data.message, type);
-            document.getElementById('createUserForm').reset();
-        }
-    } catch (error) {
-        console.error('Error creating user:', error);
-        showNotification('Failed to create user. Please try again.', 'error');
+  const nameInput = document.getElementById("newUserName");
+  const emailInput = document.getElementById("newUserEmail");
+  const roleInput = document.getElementById("newUserRole");
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim().toLowerCase(); // Standardize email
+  const role = roleInput.value;
+
+  // Only validate email since name is optional
+  if (!email) {
+    showNotification("Email is required", "error");
+    return;
+  }
+
+  try {
+    const response = await createUser({ name, email, role });
+    console.log(response);
+
+    if (response) {
+      const type = response.status == 201 ? "success" : "error";
+      showNotification(response.data.message, type);
+      document.getElementById("createUserForm").reset();
     }
+  } catch (error) {
+    console.error("Error creating user:", error);
+    showNotification("Failed to create user. Please try again.", "error");
+  }
 }

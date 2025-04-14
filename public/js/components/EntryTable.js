@@ -355,25 +355,27 @@ export function cleanup() {
 
 // Create the delete entry confirmation function
 window.deleteEntryConfirm = function (entryId) {
+  if (confirm("Are you sure you want to delete this entry?")) {
+    deleteEntry(entryId)
+      .then((response) => {
+        if (response) {
+          // Remove entry from the table
+          document.querySelector(`tr[data-entry-id="${entryId}"]`).remove();
 
-  if (confirm('Are you sure you want to delete this entry?')) {
-    deleteEntry(entryId).then(response => {
-      if (response) {
-        // Remove entry from the table
-        document.querySelector(`tr[data-entry-id="${entryId}"]`).remove();
-              
-        // Check if table is now empty
-        const tbody = document.querySelector("#vehicleEntryTable tbody");
-        if (!tbody || !tbody.querySelector('tr')) {
-          document.getElementById('noEntriesMessage').classList.remove('hidden');
+          // Check if table is now empty
+          const tbody = document.querySelector("#vehicleEntryTable tbody");
+          if (!tbody || !tbody.querySelector("tr")) {
+            document
+              .getElementById("noEntriesMessage")
+              .classList.remove("hidden");
+          }
+
+          showNotification("Entry deleted successfully", "success");
         }
-              
-        showNotification('Entry deleted successfully', 'success');
-      }
-    })
-      .catch(error => {
-        console.error('Error deleting entry:', error);
-        showNotification('Failed to delete entry', 'error');
+      })
+      .catch((error) => {
+        console.error("Error deleting entry:", error);
+        showNotification("Failed to delete entry", "error");
       });
   }
-}
+};

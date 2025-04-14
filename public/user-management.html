@@ -1,55 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Management - Vehicle Management System NSUT</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="/css/styles.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 min-h-screen">
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link href="/css/styles.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-100 min-h-screen">
     <!-- Navigation Bar -->
     <nav class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="text-xl font-bold">
-                <a href="/" class="hover:text-blue-200">Vehicle Management System NSUT</a>
-            </div>
-            <div id="authSection" class="flex items-center space-x-4">
-                <!-- Auth content will be loaded by AuthUI.js -->
-                <span id="loadingAuth">Loading...</span>
-            </div>
+      <div
+        class="container mx-auto px-4 py-3 flex justify-between items-center"
+      >
+        <div class="text-xl font-bold">
+          <a href="/" class="hover:text-blue-200"
+            >Vehicle Management System NSUT</a
+          >
         </div>
+        <div id="authSection" class="flex items-center space-x-4">
+          <!-- Auth content will be loaded by AuthUI.js -->
+          <span id="loadingAuth">Loading...</span>
+        </div>
+      </div>
     </nav>
 
     <!-- Authentication Required Message -->
-    <div id="authRequiredMessage" class="hidden container mx-auto mt-20 px-4 py-8 text-center">
-        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow">
-            <p class="font-bold">Authentication Required</p>
-            <p>Please sign in to view this page. Only administrators can access user management.</p>
-            <button id="goToSignIn" class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 btn-press-effect">
-                Sign In
-            </button>
-        </div>
+    <div
+      id="authRequiredMessage"
+      class="hidden container mx-auto mt-20 px-4 py-8 text-center"
+    >
+      <div
+        class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow"
+      >
+        <p class="font-bold">Authentication Required</p>
+        <p>
+          Please sign in to view this page. Only administrators can access user
+          management.
+        </p>
+        <button
+          id="goToSignIn"
+          class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 btn-press-effect"
+        >
+          Sign In
+        </button>
+      </div>
     </div>
 
     <!-- Main Content Container - initially hidden -->
     <div id="mainContent" class="container mx-auto px-4 py-8 hidden">
-        <h1 class="text-2xl font-bold mb-6">User Management</h1>
-        
-        <!-- User Form Container -->
-        <div id="userFormContainer" class="bg-white shadow-lg rounded-lg p-6 mb-8"></div>
-        
-        <!-- Users Table Container -->
-        <div id="usersTableContainer" class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <h2 class="text-xl font-bold p-4 border-b">User List</h2>
-            <div id="usersTable" class="overflow-x-auto"></div>
-            <div id="noUsersMessage" class="text-center text-gray-500 my-8 hidden">
-                No users found.
-            </div>
+      <h1 class="text-2xl font-bold mb-6">User Management</h1>
+
+      <!-- User Form Container -->
+      <div
+        id="userFormContainer"
+        class="bg-white shadow-lg rounded-lg p-6 mb-8"
+      ></div>
+
+      <!-- Users Table Container -->
+      <div
+        id="usersTableContainer"
+        class="bg-white shadow-lg rounded-lg overflow-hidden"
+      >
+        <h2 class="text-xl font-bold p-4 border-b">User List</h2>
+        <div id="usersTable" class="overflow-x-auto"></div>
+        <div id="noUsersMessage" class="text-center text-gray-500 my-8 hidden">
+          No users found.
         </div>
+      </div>
     </div>
 
     <!-- Load our modules -->
     <script type="module" src="/js/user-management.js"></script>
-</body>
+  </body>
 </html>

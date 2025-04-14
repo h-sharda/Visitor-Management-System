@@ -1,11 +1,11 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.GMAIL,
-    pass: process.env.GMAIL_APP_PASSWORD
-  }
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
 });
 
 export async function sendOTPEmail(email, otp) {
@@ -13,7 +13,7 @@ export async function sendOTPEmail(email, otp) {
     const mailOptions = {
       from: process.env.GMAIL,
       to: email,
-      subject: 'Your Login OTP',
+      subject: "Your Login OTP",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
           <h2 style="color: #333;">Your Login OTP</h2>
@@ -22,13 +22,13 @@ export async function sendOTPEmail(email, otp) {
           <p>This OTP will expire in 10 minutes.</p>
           <p>If you did not request this OTP, please ignore this email.</p>
         </div>
-      `
+      `,
     };
 
     const info = await transporter.sendMail(mailOptions);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error("Error sending email:", error);
     return { success: false, error: error.message };
   }
 }

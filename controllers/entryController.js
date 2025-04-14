@@ -1,12 +1,16 @@
-import { s3Client, getSignedUrl } from '../config/aws.js';
-import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import Entry from '../models/Entry.js';
-import extractNumberPlate from '../services/numberExtractionService.js';
+import { s3Client, getSignedUrl } from "../config/aws.js";
+import {
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import Entry from "../models/Entry.js";
+import extractNumberPlate from "../services/numberExtractionService.js";
 
 export async function createEntry(req, res) {
   try {
     if (!req.file) {
-      return res.status(400).send('No file uploaded or invalid file type.');
+      return res.status(400).send("No file uploaded or invalid file type.");
     }
 
     const entryTime = new Date();
@@ -15,31 +19,33 @@ export async function createEntry(req, res) {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: `vehicle-entries/${entryTime.getTime()}_${req.file.originalname}`,
       Body: req.file.buffer,
-      ContentType: req.file.mimetype
+      ContentType: req.file.mimetype,
     };
 
     await s3Client.send(new PutObjectCommand(params));
 
     const command = new GetObjectCommand({
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: params.Key
+      Key: params.Key,
     });
 
-    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    const signedUrl = await getSignedUrl(s3Client, command, {
+      expiresIn: 3600,
+    });
     const numberPlate = await extractNumberPlate(signedUrl);
 
     const entry = new Entry({
       timestamp: entryTime,
       imageKey: params.Key,
-      number: numberPlate
+      number: numberPlate,
     });
-    
+
     await entry.save();
 
-    res.redirect('/');
+    res.redirect("/");
   } catch (error) {
-    console.error('Upload error:', error);
-    res.status(500).send('Error uploading entry');
+    console.error("Upload error:", error);
+    res.status(500).send("Error uploading entry");
   }
 }
 
@@ -54,33 +60,35 @@ export async function getEntries(req, res) {
       .sort({ timestamp: -1 })
       .skip(skip)
       .limit(limit);
-    
+
     const totalEntries = await Entry.countDocuments();
-    
-    const entriesWithUrls = await Promise.all(entries.map(async (entry) => {
-      const command = new GetObjectCommand({
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: entry.imageKey
-      });
 
-      const signedUrl = await getSignedUrl(s3Client, command, { 
-        expiresIn: 3600 
-      });
+    const entriesWithUrls = await Promise.all(
+      entries.map(async (entry) => {
+        const command = new GetObjectCommand({
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: entry.imageKey,
+        });
 
-      return {
-        ...entry.toObject(),
-        signedUrl
-      };
-    }));
+        const signedUrl = await getSignedUrl(s3Client, command, {
+          expiresIn: 3600,
+        });
+
+        return {
+          ...entry.toObject(),
+          signedUrl,
+        };
+      })
+    );
 
     res.json({
       entries: entriesWithUrls,
       totalEntries,
-      hasMore: totalEntries > skip + entries.length
+      hasMore: totalEntries > skip + entries.length,
     });
   } catch (error) {
-    console.error('Error fetching entries:', error);
-    res.status(500).send('Error fetching entries');
+    console.error("Error fetching entries:", error);
+    res.status(500).send("Error fetching entries");
   }
 }
 
@@ -90,23 +98,25 @@ export async function updateEntryNumber(req, res) {
     const { number } = req.body;
 
     if (!number) {
-      return res.status(400).json({ message: 'Number is required' });
+      return res.status(400).json({ message: "Number is required" });
     }
 
     const entry = await Entry.findByIdAndUpdate(
-      id, 
-      { number }, 
+      id,
+      { number },
       { new: true, runValidators: true }
     );
 
     if (!entry) {
-      return res.status(404).json({ message: 'Entry not found' });
+      return res.status(404).json({ message: "Entry not found" });
     }
 
     res.json(entry);
   } catch (error) {
-    console.error('Error updating entry:', error);
-    res.status(500).json({ message: 'Error updating entry', error: error.message });
+    console.error("Error updating entry:", error);
+    res
+      .status(500)
+      .json({ message: "Error updating entry", error: error.message });
   }
 }
 
@@ -116,20 +126,22 @@ export async function deleteEntry(req, res) {
 
     const entry = await Entry.findById(id);
     if (!entry) {
-      return res.status(404).json({ message: 'Entry not found' });
+      return res.status(404).json({ message: "Entry not found" });
     }
 
     const deleteParams = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: entry.imageKey
+      Key: entry.imageKey,
     };
     await s3Client.send(new DeleteObjectCommand(deleteParams));
 
     await Entry.findByIdAndDelete(id);
 
-    res.json({ message: 'Entry deleted successfully' });
+    res.json({ message: "Entry deleted successfully" });
   } catch (error) {
-    console.error('Error deleting entry:', error);
-    res.status(500).json({ message: 'Error deleting entry', error: error.message });
+    console.error("Error deleting entry:", error);
+    res
+      .status(500)
+      .json({ message: "Error deleting entry", error: error.message });
   }
 }

@@ -1,7 +1,12 @@
-import express from 'express';
-import { requestOTP, verifyLoginOTP } from '../controllers/authController.js';
-import { createUser, getUsers, deleteUser, updateUser } from '../controllers/userController.js';
-import { checkAdmin } from '../middlewares/authMiddleware.js';
+import express from "express";
+import { requestOTP, verifyLoginOTP } from "../controllers/authController.js";
+import {
+  createUser,
+  getUsers,
+  deleteUser,
+  updateUser,
+} from "../controllers/userController.js";
+import { checkAdmin } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -16,19 +21,19 @@ const isAuthenticated = (req, res, next) => {
   if (req.user) {
     return next();
   }
-  return res.status(401).json({ message: 'Authentication required' });
+  return res.status(401).json({ message: "Authentication required" });
 };
 
 // Add these new routes
-router.get('/get-all', isAuthenticated, checkAdmin, getUsers);
-router.delete('/:id', isAuthenticated, checkAdmin, deleteUser);
-router.put('/:id', isAuthenticated, checkAdmin, updateUser);
+router.get("/get-all", isAuthenticated, checkAdmin, getUsers);
+router.delete("/:id", isAuthenticated, checkAdmin, deleteUser);
+router.put("/:id", isAuthenticated, checkAdmin, updateUser);
 
-router.get('/check-auth', (req, res) => {
+router.get("/check-auth", (req, res) => {
   if (req.user) {
-    return res.json({ 
-      authenticated: true, 
-      user: req.user 
+    return res.json({
+      authenticated: true,
+      user: req.user,
     });
   }
   return res.json({ authenticated: false });

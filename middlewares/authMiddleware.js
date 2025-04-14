@@ -1,4 +1,4 @@
-import { validateToken } from '../services/authService.js';
+import { validateToken } from "../services/authService.js";
 
 export function checkForAuthenticationCookie(cookieName) {
   return (req, res, next) => {
@@ -19,8 +19,8 @@ export function checkForAuthenticationCookie(cookieName) {
 }
 
 export function checkAdmin(req, res, next) {
-  if (req.user?.role !== 'ADMIN') {
-    return res.status(403).json({ message: 'Admin access required' });
+  if (req.user?.role !== "ADMIN") {
+    return res.status(403).json({ message: "Admin access required" });
   }
   next();
 }

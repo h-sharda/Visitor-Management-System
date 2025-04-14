@@ -1,4 +1,4 @@
-import OTP from '../models/OTP.js';
+import OTP from "../models/OTP.js";
 
 // Generate a 6-digit OTP
 export function generateOTP() {
@@ -13,11 +13,15 @@ export async function saveOTP(email, otp) {
   const existingOTP = await OTP.findOne({ email });
 
   if (existingOTP) {
-    const cooldownEnd = new Date(existingOTP.lastGeneratedAt.getTime() + 5 * 60 * 1000);
+    const cooldownEnd = new Date(
+      existingOTP.lastGeneratedAt.getTime() + 5 * 60 * 1000
+    );
     if (now < cooldownEnd) {
       const timeLeftMs = cooldownEnd - now;
       const timeLeftMinutes = Math.ceil(timeLeftMs / (60 * 1000));
-      throw new Error(`Please wait ${timeLeftMinutes} minute(s) before requesting a new OTP`);
+      throw new Error(
+        `Please wait ${timeLeftMinutes} minute(s) before requesting a new OTP`
+      );
     }
 
     existingOTP.otp = otp;
@@ -31,7 +35,7 @@ export async function saveOTP(email, otp) {
     email,
     otp,
     expiresAt,
-    lastGeneratedAt: now
+    lastGeneratedAt: now,
   });
 
   await newOTP.save();
@@ -43,16 +47,16 @@ export async function verifyOTP(email, userOTP) {
   const otpRecord = await OTP.findOne({ email });
 
   if (!otpRecord) {
-    throw new Error('No OTP found for this email');
+    throw new Error("No OTP found for this email");
   }
 
   const now = new Date();
   if (now > otpRecord.expiresAt) {
-    throw new Error('OTP has expired');
+    throw new Error("OTP has expired");
   }
 
   if (otpRecord.otp !== userOTP) {
-    throw new Error('Invalid OTP');
+    throw new Error("Invalid OTP");
   }
 
   await OTP.deleteOne({ _id: otpRecord._id });

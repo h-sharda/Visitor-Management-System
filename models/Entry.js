@@ -1,18 +1,21 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const entrySchema = new mongoose.Schema({
-  timestamp: { 
-    type: Date,
-    required: true
+const entrySchema = new mongoose.Schema(
+  {
+    timestamp: {
+      type: Date,
+      required: true,
+    },
+    imageKey: {
+      type: String,
+      required: true,
+    },
+    number: {
+      type: String,
+      default: "ABC123",
+    },
   },
-  imageKey: { 
-    type: String, 
-    required: true 
-  },
-  number: { 
-    type: String, 
-    default: "ABC123"
-  }
-}, { collection: 'vehicle-entries' });
+  { collection: "vehicle-entries" }
+);
 
-export default mongoose.model('Entry', entrySchema);
+export default mongoose.model("Entry", entrySchema);

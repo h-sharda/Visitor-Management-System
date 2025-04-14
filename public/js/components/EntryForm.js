@@ -1,12 +1,12 @@
-import { uploadEntry } from '../utils/api.js';
-import { renderEntryTable } from './EntryTable.js';
-import { showNotification } from '../utils/notifications.js';
+import { uploadEntry } from "../utils/api.js";
+import { renderEntryTable } from "./EntryTable.js";
+import { showNotification } from "../utils/notifications.js";
 
 // Render entry form
 export function renderEntryForm() {
-    const container = document.getElementById('entryFormContainer');
-    
-    container.innerHTML = `
+  const container = document.getElementById("entryFormContainer");
+
+  container.innerHTML = `
         <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
             <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Add New Vehicle Entry</h1>
             
@@ -32,47 +32,49 @@ export function renderEntryForm() {
             </form>
         </div>
     `;
-    
-    // Add event listener to form
-    document.getElementById('uploadForm').addEventListener('submit', handleFormSubmit);
+
+  // Add event listener to form
+  document
+    .getElementById("uploadForm")
+    .addEventListener("submit", handleFormSubmit);
 }
 
 // Handle form submission with button state management
 async function handleFormSubmit(e) {
-    e.preventDefault();
-    
-    const uploadButton = document.getElementById('uploadButton');
-    const originalText = uploadButton.textContent;
-    
-    // Show loading state
-    uploadButton.textContent = 'Uploading...';
-    uploadButton.disabled = true;
-    uploadButton.classList.add('opacity-75');
-    
-    const formData = new FormData(e.target);
+  e.preventDefault();
 
-    try {
-        const response = await uploadEntry(formData);
-        
-        if (response && response.redirected) {
-            window.location.href = response.url;
-        } else if (response) {
-            // Refresh entries after upload
-            await renderEntryTable();
-            
-            // Clear the file input
-            document.getElementById('fileInput').value = '';
-            
-            // Success feedback
-            showNotification('Entry uploaded successfully', 'success');
-        }
-    } catch (error) {
-        console.error('Upload error:', error);
-        showNotification('Failed to upload entry. Please try again.', 'error');
-    } finally {
-        // Restore button state
-        uploadButton.textContent = originalText;
-        uploadButton.disabled = false;
-        uploadButton.classList.remove('opacity-75');
+  const uploadButton = document.getElementById("uploadButton");
+  const originalText = uploadButton.textContent;
+
+  // Show loading state
+  uploadButton.textContent = "Uploading...";
+  uploadButton.disabled = true;
+  uploadButton.classList.add("opacity-75");
+
+  const formData = new FormData(e.target);
+
+  try {
+    const response = await uploadEntry(formData);
+
+    if (response && response.redirected) {
+      window.location.href = response.url;
+    } else if (response) {
+      // Refresh entries after upload
+      await renderEntryTable();
+
+      // Clear the file input
+      document.getElementById("fileInput").value = "";
+
+      // Success feedback
+      showNotification("Entry uploaded successfully", "success");
     }
+  } catch (error) {
+    console.error("Upload error:", error);
+    showNotification("Failed to upload entry. Please try again.", "error");
+  } finally {
+    // Restore button state
+    uploadButton.textContent = originalText;
+    uploadButton.disabled = false;
+    uploadButton.classList.remove("opacity-75");
+  }
 }

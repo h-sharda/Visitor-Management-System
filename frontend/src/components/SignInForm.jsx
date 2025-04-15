@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { requestOTP, verifyOTP } from '../services/auth';
 import { useAuth } from '../hooks/useAuth';
 import { useNotification } from '../hooks/useNotification';
-import '../styles/login.css';
+import '../styles/signin.css';
 
-const LoginForm = () => {
+const SignInForm = () => {
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
     const [showOtpForm, setShowOtpForm] = useState(false);
@@ -88,7 +88,7 @@ const LoginForm = () => {
     
         try {
             const response = await verifyOTP(email, otp);
-            showNotification('Login successful', 'success');
+            showNotification('SignIn successful', 'success');
       
             // Update auth context with user data
             if (response.user) {
@@ -240,4 +240,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SignInForm;

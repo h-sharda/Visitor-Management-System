@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoginForm from '../components/LoginForm';
+import SignInForm from '../components/SignInForm';
 import { useAuth } from '../hooks/useAuth';
-import '../styles/login.css';
+import '../styles/signin.css';
 
-const Login = () => {
+const SignIn = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   
@@ -25,11 +25,11 @@ const Login = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <LoginForm />
+          <SignInForm />
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default SignIn;

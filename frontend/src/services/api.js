@@ -9,7 +9,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      window.location.href = "/login";
+      window.location.href = "/signin";
     }
     return Promise.reject(error);
   }

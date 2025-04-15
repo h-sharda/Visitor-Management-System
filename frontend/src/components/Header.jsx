@@ -42,7 +42,7 @@ const Header = () => {
             </>
           ) : (
             <Link 
-              to="/login" 
+              to="/signin" 
               className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md btn-press-effect"
             >
               Sign In

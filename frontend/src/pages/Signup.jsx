@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createAccessRequest } from '../services/api';
 import { useNotification } from '../hooks/useNotification';
-import '../styles/login.css';
+import '../styles/signin.css';
 
-const Signup = () => {
+const SignUp = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -34,8 +34,8 @@ const Signup = () => {
       showNotification(response.message, 'success');
       // Clear form
       setFormData({ fullName: '', email: '', purpose: '' });
-      // Redirect to login with success message
-      navigate('/login', { state: { message: 'Request submitted successfully. You will be notified once approved.' } });
+      // Redirect to signin with success message
+      navigate('/signin', { state: { message: 'Request submitted successfully. You will be notified once approved.' } });
     } catch (error) {
       console.error('Signup error:', error);
       showNotification(error.response?.data?.message || 'Error submitting request. Please try again.', 'error');
@@ -125,7 +125,7 @@ const Signup = () => {
 
             <div className="text-sm text-center">
               <a 
-                href="/login" 
+                href="/signin" 
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
                 Already have an account? Sign in
@@ -138,4 +138,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignUp;

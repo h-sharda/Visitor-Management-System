@@ -2,9 +2,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import Layout from './components/Layout';
 import Home from './pages/Home';
-import Login from './pages/Login';
+import SignIn from './pages/SignIn';
 import UserManagement from './pages/UserManagement';
-import Signup from './pages/Signup';
+import Signup from './pages/SignUp';
 import { hasPermission } from './services/permissions';
 
 function AppRoutes() {
@@ -16,7 +16,7 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<Signup />} />
       
       <Route path="/" element={
@@ -39,7 +39,7 @@ function AppRoutes() {
 }
 
 // Protected route component
-function ProtectedRoute({ isAuthenticated, children, redirectPath = '/login' }) {
+function ProtectedRoute({ isAuthenticated, children, redirectPath = '/signin' }) {
   if (!isAuthenticated) {
     return <Navigate to={redirectPath} replace />;
   }

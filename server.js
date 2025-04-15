@@ -9,6 +9,7 @@ import { checkForAuthenticationCookie } from "./middlewares/authMiddleware.js";
 import userRoute from "./routes/userRoutes.js";
 import entryRoutes from "./routes/entryRoutes.js";
 import accessRequestRoutes from "./routes/accessRequestRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, "frontend/dist")));
 app.use("/api/users", userRoute);
 app.use("/api/entries", entryRoutes);
 app.use("/api/access-requests", accessRequestRoutes);
+app.use("/api/contact", contactRoutes);
 
 // Serve the main page
 app.get(/.*/, (req, res) => {

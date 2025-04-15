@@ -155,3 +155,14 @@ export async function rejectAccessRequest(requestId) {
     throw error;
   }
 }
+
+// Contact form API call
+export async function submitContactForm(formData) {
+  try {
+    const response = await api.post("/api/contact/submit", formData);
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting contact form:", error);
+    throw error;
+  }
+}

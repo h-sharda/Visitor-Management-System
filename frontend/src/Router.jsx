@@ -4,7 +4,8 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import UserManagement from './pages/UserManagement';
-import Signup from './pages/SignUp';
+import SignUp from './pages/SignUp';
+import Contact from './pages/Contact';
 import { hasPermission } from './services/permissions';
 
 function AppRoutes() {
@@ -16,8 +17,23 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path="/signin" element={
+        <Layout>
+          <SignIn />
+        </Layout>
+      } />
+
+      <Route path="/signup" element={
+        <Layout>
+          <SignUp />
+        </Layout>
+      } />
+
+      <Route path="/contact" element={
+        <Layout>
+          <Contact />
+        </Layout>
+      } />
       
       <Route path="/" element={
         <ProtectedRoute isAuthenticated={!!user}>

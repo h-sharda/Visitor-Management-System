@@ -77,9 +77,7 @@ export async function verifyLoginOTP(req, res) {
 
     // Set cookie and redirect to home
     return res
-      .cookie("token", token, {
-        maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days persistent cookie
-      })
+      .cookie("token", token, { maxAge: 90 * 24 * 60 * 60 * 1000 })
       .redirect("/");
   } catch (error) {
     console.error("Verify OTP error:", error);

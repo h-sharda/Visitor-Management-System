@@ -8,6 +8,7 @@ import "./config/mongodb.js";
 import { checkForAuthenticationCookie } from "./middlewares/authMiddleware.js";
 import userRoute from "./routes/userRoutes.js";
 import entryRoutes from "./routes/entryRoutes.js";
+import accessRequestRoutes from "./routes/accessRequestRoutes.js";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, "frontend/dist")));
 // Routes
 app.use("/api/users", userRoute);
 app.use("/api/entries", entryRoutes);
+app.use("/api/access-requests", accessRequestRoutes);
 
 // Serve the main page
 app.get(/.*/, (req, res) => {

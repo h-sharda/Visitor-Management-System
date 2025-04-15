@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import UserManagement from './pages/UserManagement';
+import Signup from './pages/Signup';
 import { hasPermission } from './services/permissions';
 
 function AppRoutes() {
@@ -16,6 +17,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
       
       <Route path="/" element={
         <ProtectedRoute isAuthenticated={!!user}>

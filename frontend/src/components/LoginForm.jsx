@@ -100,6 +100,7 @@ const LoginForm = () => {
       
             // Redirect to home page
             navigate('/');
+            // !!!ERROR!!!
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Invalid OTP';
             showNotification(errorMessage, 'error');
@@ -108,7 +109,7 @@ const LoginForm = () => {
         }
     };
 
-const startCooldownTimer = (minutes) => {
+  const startCooldownTimer = (minutes) => {
     if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
     
     let timeLeft = minutes * 60; // Convert minutes to seconds
@@ -151,7 +152,7 @@ const startCooldownTimer = (minutes) => {
   };
 
   return (
-    <div className="auth-container">
+    <>
       <h2 className="form-title">Sign In</h2>
       
       {/* Email Form */}
@@ -230,7 +231,12 @@ const startCooldownTimer = (minutes) => {
           )}
         </form>
       )}
+    <div className="text-sm text-center mt-4">
+      <a href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
+        Need an account? Request access
+      </a>
     </div>
+    </>
   );
 };
 

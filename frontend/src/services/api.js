@@ -111,3 +111,47 @@ export async function updateUser(userId, userData) {
     throw error;
   }
 }
+
+// Create access request
+export async function createAccessRequest(requestData) {
+  try {
+    const response = await api.post("/api/access-requests/create", requestData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating access request:", error);
+    throw error;
+  }
+}
+
+// Fetch access requests (admin only)
+export async function fetchAccessRequests() {
+  try {
+    const response = await api.get("/api/access-requests/get-all");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching access requests:", error);
+    throw error;
+  }
+}
+
+// Approve access request (admin only)
+export async function approveAccessRequest(requestId, roleData) {
+  try {
+    const response = await api.put(`/api/access-requests/approve/${requestId}`, roleData);
+    return response.data;
+  } catch (error) {
+    console.error("Error approving access request:", error);
+    throw error;
+  }
+}
+
+// Reject access request (admin only)
+export async function rejectAccessRequest(requestId) {
+  try {
+    const response = await api.put(`/api/access-requests/reject/${requestId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error rejecting access request:", error);
+    throw error;
+  }
+}

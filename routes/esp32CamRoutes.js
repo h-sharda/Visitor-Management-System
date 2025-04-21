@@ -3,8 +3,8 @@ import {
   upload,
   multerErrorHandler,
 } from "../middlewares/upload32Middleware.js";
-import { s3Client, getSignedUrl } from "../config/aws.js";
-import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client } from "../config/aws.js";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import Entry from "../models/Entry.js";
 
 const router = express.Router();
@@ -38,34 +38,20 @@ router.post(
       const imageFilename = `${cleanTimestamp}_${numberPlate}.bmp`;
 
       // Upload to S3
-      const s3Key = `anpr_data/images/${imageFilename}`;
       const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: s3Key,
+        Key: `vehicle-entries/${entryTime.getTime()}_${req.file.originalname}`,
         Body: req.file.buffer,
         ContentType: "image/bmp",
       };
 
       await s3Client.send(new PutObjectCommand(params));
 
-      // Generate a signed URL for accessing the image
-      const command = new GetObjectCommand({
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: s3Key,
-      });
-
-      const imageUrl = await getSignedUrl(s3Client, command, {
-        expiresIn: 604800, // URL valid for 7 days
-      });
-
       // Create entry in MongoDB
       const record = {
-        number_plate: numberPlate,
         timestamp: timestamp,
-        image_path: `/images/${imageFilename}`, // Keep path format similar to FastAPI
-        s3_key: s3Key,
-        s3_url: imageUrl,
-        received_at: new Date().toISOString(),
+        imageKey: params.Key,
+        number: numberPlate
       };
 
       // Save to MongoDB

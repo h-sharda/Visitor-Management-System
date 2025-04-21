@@ -55,8 +55,9 @@ function AppRoutes() {
 }
 
 // Protected route component
-function ProtectedRoute({ isAuthenticated, children, redirectPath = '/signin' }) {
+function ProtectedRoute({ isAuthenticated, children, redirectPath = '/signup' }) {
   if (!isAuthenticated) {
+    console.log("not logged in");
     return <Navigate to={redirectPath} replace />;
   }
   

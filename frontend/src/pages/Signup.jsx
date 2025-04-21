@@ -1,10 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { createAccessRequest } from '../services/api';
 import { useNotification } from '../hooks/useNotification';
 import '../styles/signin.css';
 
 const SignUp = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    // If user is already logged in, redirect to home page
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -12,7 +23,6 @@ const SignUp = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const { showNotification } = useNotification();
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;

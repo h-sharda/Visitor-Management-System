@@ -55,9 +55,9 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="flex flex-col justify-center items-center flex-grow">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="text-center text-3xl font-extrabold text-gray-900">
           Request Access
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
@@ -65,11 +65,14 @@ const SignUp = () => {
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="fullName"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Full Name
               </label>
               <div className="mt-1">
@@ -86,7 +89,10 @@ const SignUp = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
               </label>
               <div className="mt-1">
@@ -104,7 +110,10 @@ const SignUp = () => {
             </div>
 
             <div>
-              <label htmlFor="purpose" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="purpose"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Purpose
               </label>
               <div className="mt-1">
@@ -126,16 +135,16 @@ const SignUp = () => {
                 type="submit"
                 disabled={isLoading}
                 className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-                  isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                  isLoading ? "opacity-70 cursor-not-allowed" : ""
                 }`}
               >
-                {isLoading ? 'Submitting...' : 'Submit Request'}
+                {isLoading ? "Submitting..." : "Submit Request"}
               </button>
             </div>
 
             <div className="text-sm text-center">
-              <a 
-                href="/signin" 
+              <a
+                href="/signin"
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
                 Already have an account? Sign in

@@ -10,6 +10,7 @@ import userRoute from "./routes/userRoutes.js";
 import entryRoutes from "./routes/entryRoutes.js";
 import accessRequestRoutes from "./routes/accessRequestRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import esp32Routes from "./routes/contactRoutes.js";
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use("/api/users", userRoute);
 app.use("/api/entries", entryRoutes);
 app.use("/api/access-requests", accessRequestRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/esp32", esp32Routes);
 
 // Serve the main page
 app.get(/.*/, (req, res) => {

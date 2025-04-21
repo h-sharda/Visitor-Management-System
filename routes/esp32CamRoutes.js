@@ -6,83 +6,89 @@ import {
 import { s3Client, getSignedUrl } from "../config/aws.js";
 import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import Entry from "../models/Entry.js";
-import extractNumberPlate from "../services/numberExtractionService.js";
 
 const router = express.Router();
 
-// ESP32-CAM Authentication middleware
-const authenticateESP32CAM = (req, res, next) => {
-  const authToken = req.headers.authorization;
-  const validToken = process.env.ESP32_PASSWORD;
-
-  if (!authToken || authToken !== validToken) {
-    return res
-      .status(401)
-      .json({ message: "Unauthorized: Invalid ESP32-CAM token" });
-  }
-
-  next();
-};
-
-// Handle ESP32-CAM image uploads
+// Updated route to match FastAPI endpoint
 router.post(
-  "/esp32-upload",
-  authenticateESP32CAM,
+  "/upload",
   upload.single("image"),
   async (req, res) => {
     try {
+      // Check for required fields
       if (!req.file) {
-        return res
-          .status(400)
-          .json({ message: "No file uploaded or invalid file type" });
+        return res.status(400).json({
+          status: "error",
+          detail: "No image file provided",
+        });
       }
 
-      const entryTime = new Date();
+      if (!req.body.number_plate || !req.body.timestamp) {
+        return res.status(400).json({
+          status: "error",
+          detail: "Missing required fields: number_plate and timestamp",
+        });
+      }
 
-      // Upload to S3 - fixed template string syntax
+      const numberPlate = req.body.number_plate;
+      const timestamp = req.body.timestamp;
+
+      // Generate a clean timestamp for the filename
+      const cleanTimestamp = timestamp.replace(" ", "_").replace(/:/g, "-");
+      const imageFilename = `${cleanTimestamp}_${numberPlate}.bmp`;
+
+      // Upload to S3
+      const s3Key = `anpr_data/images/${imageFilename}`;
       const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `vehicle-entries/esp32cam_${entryTime.getTime()}_${
-          req.file.originalname
-        }`,
+        Key: s3Key,
         Body: req.file.buffer,
-        ContentType: req.file.mimetype,
+        ContentType: "image/bmp",
       };
 
       await s3Client.send(new PutObjectCommand(params));
 
-      // Generate signed URL for license plate extraction
+      // Generate a signed URL for accessing the image
       const command = new GetObjectCommand({
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: params.Key,
+        Key: s3Key,
       });
 
-      const signedUrl = await getSignedUrl(s3Client, command, {
-        expiresIn: 3600,
+      const imageUrl = await getSignedUrl(s3Client, command, {
+        expiresIn: 604800, // URL valid for 7 days
       });
-
-      // Extract license plate number using your existing service
-      const numberPlate = await extractNumberPlate(signedUrl);
 
       // Create entry in MongoDB
-      const entry = new Entry({
-        timestamp: entryTime,
-        imageKey: params.Key,
-        number: numberPlate,
-      });
+      const record = {
+        number_plate: numberPlate,
+        timestamp: timestamp,
+        image_path: `/images/${imageFilename}`, // Keep path format similar to FastAPI
+        s3_key: s3Key,
+        s3_url: imageUrl,
+        received_at: new Date().toISOString(),
+      };
 
+      // Save to MongoDB
+      const entry = new Entry(record);
       await entry.save();
 
-      res.status(201).json({
-        message: "Entry created successfully",
-        entryId: entry._id,
-        numberPlate,
+      // Match the FastAPI response format
+      return res.status(200).json({
+        status: "success",
+        message: `ANPR data received and saved for plate ${numberPlate}`,
+        record: {
+          id: entry._id,
+          number_plate: numberPlate,
+          timestamp: timestamp,
+          image_path: `/images/${imageFilename}`,
+          received_at: record.received_at,
+        },
       });
     } catch (error) {
-      console.error("ESP32-CAM upload error:", error);
-      res.status(500).json({
-        message: "Error processing ESP32-CAM upload",
-        error: error.message,
+      console.error("ESP32-CAM ANPR upload error:", error);
+      return res.status(500).json({
+        status: "error",
+        detail: `Error saving ANPR data: ${error.message}`,
       });
     }
   },

@@ -10,7 +10,7 @@ import userRoute from "./routes/userRoutes.js";
 import entryRoutes from "./routes/entryRoutes.js";
 import accessRequestRoutes from "./routes/accessRequestRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
-import esp32Routes from "./routes/contactRoutes.js";
+import esp32Routes from "./routes/esp32CamRoutes.js";
 
 dotenv.config();
 

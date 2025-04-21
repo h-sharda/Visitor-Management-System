@@ -40,7 +40,7 @@ router.post(
       // Upload to S3
       const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `vehicle-entries/${entryTime.getTime()}_${req.file.originalname}`,
+        Key: `vehicle-entries/${timestamp}_${req.file.originalname}`,
         Body: req.file.buffer,
         ContentType: "image/bmp",
       };

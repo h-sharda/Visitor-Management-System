@@ -61,20 +61,20 @@ router.post(
       // Match the FastAPI response format
       return res.status(200).json({
         status: "success",
-        message: `ANPR data received and saved for plate ${numberPlate}`,
+        message: `Entry recieved and saved in database`,
         record: {
           id: entry._id,
           number_plate: numberPlate,
           timestamp: timestamp,
-          image_path: `/images/${imageFilename}`,
+          imageKey: params.Key,
           received_at: record.received_at,
         },
       });
     } catch (error) {
-      console.error("ESP32-CAM ANPR upload error:", error);
+      console.error("ESP32-CAM upload error:", error);
       return res.status(500).json({
         status: "error",
-        detail: `Error saving ANPR data: ${error.message}`,
+        detail: `Error saving ESP entry: ${error.message}`,
       });
     }
   },

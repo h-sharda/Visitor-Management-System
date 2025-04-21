@@ -1,27 +1,35 @@
 import axios from "axios";
+import FormData from "form-data";
 
-const fallbackPlates = [
-  "DL7CQ1939",
-  "GJ03ER0563",
-  "J389NLT"
-];
+// API details
+const API_KEY = process.env.NUMBER_EXTRACTION_API_KEY;
+const API_URL = process.env.NUMBER_EXTRACTION_API;
 
-const getRandomFallbackPlate = () => {
-  const index = Math.floor(Math.random() * fallbackPlates.length);
-  return fallbackPlates[index];
-};
-
-const extractNumberPlate = async (signedUrl) => {
+/**
+ * Extracts number plate from an image buffer using CircuitDigest API.
+ * @param {Buffer} imageBuffer - The image file buffer.
+ * @param {string} filename - Original filename (used for MIME type and naming).
+ * @returns {Promise<string>} - Returns extracted number plate or 'Not found'.
+ */
+export async function extractNumberPlate(imageBuffer, filename) {
   try {
-    const response = await axios.post(process.env.NUMBER_EXTRACTION_API, {
-      imageUrl: signedUrl,
+    const form = new FormData();
+    form.append("imageFile", imageBuffer, {
+      filename: filename || "vehicle.jpg",
+      contentType: "image/jpeg", // You could dynamically set this if needed
     });
 
-    return response.data.numberPlate || getRandomFallbackPlate();
-  } catch (error) {
-    console.error("Number extraction failed:", error);
-    return getRandomFallbackPlate();
-  }
-};
+    const headers = {
+      ...form.getHeaders(),
+      Authorization: API_KEY,
+    };
 
-export default extractNumberPlate;
+    const response = await axios.post(API_URL, form, { headers });
+
+    const numberPlate = response.data?.data?.number_plate || "Not found";
+    return numberPlate;
+  } catch (error) {
+    console.error("Number plate extraction failed:", error.message);
+    return "Not found";
+  }
+}

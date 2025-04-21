@@ -5,7 +5,7 @@ import {
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 import Entry from "../models/Entry.js";
-import extractNumberPlate from "../services/numberExtractionService.js";
+import { extractNumberPlate } from "../services/numberExtractionService.js";
 
 export async function createEntry(req, res) {
   try {
@@ -32,7 +32,8 @@ export async function createEntry(req, res) {
     const signedUrl = await getSignedUrl(s3Client, command, {
       expiresIn: 3600,
     });
-    const numberPlate = await extractNumberPlate(signedUrl);
+    
+    const numberPlate = await extractNumberPlate(req.file.buffer, req.file.originalname);
 
     const entry = new Entry({
       timestamp: entryTime,

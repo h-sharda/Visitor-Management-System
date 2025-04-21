@@ -32,8 +32,11 @@ export async function createEntry(req, res) {
     const signedUrl = await getSignedUrl(s3Client, command, {
       expiresIn: 3600,
     });
-    
-    const numberPlate = await extractNumberPlate(req.file.buffer, req.file.originalname);
+
+    const numberPlate = await extractNumberPlate(
+      req.file.buffer,
+      req.file.originalname
+    );
 
     const entry = new Entry({
       timestamp: entryTime,

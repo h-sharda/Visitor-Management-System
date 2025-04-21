@@ -33,7 +33,9 @@ export async function uploadEntry(formData) {
 // Fetch all entries
 export async function fetchEntries(page = 1, limit = 5) {
   try {
-    const response = await api.get(`/api/entries/get-all?page=${page}&limit=${limit}`);
+    const response = await api.get(
+      `/api/entries/get-all?page=${page}&limit=${limit}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching entries:", error);
@@ -137,7 +139,10 @@ export async function fetchAccessRequests() {
 // Approve access request (admin only)
 export async function approveAccessRequest(requestId, roleData) {
   try {
-    const response = await api.put(`/api/access-requests/approve/${requestId}`, roleData);
+    const response = await api.put(
+      `/api/access-requests/approve/${requestId}`,
+      roleData
+    );
     return response.data;
   } catch (error) {
     console.error("Error approving access request:", error);

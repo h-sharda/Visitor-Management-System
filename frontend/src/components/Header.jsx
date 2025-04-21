@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { hasPermission } from '../services/permissions';
+import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { hasPermission } from "../services/permissions";
 
 const Header = () => {
   const { user, logout } = useAuth();
@@ -13,7 +13,7 @@ const Header = () => {
             Vehicle Management System NSUT
           </Link>
         </div>
-        
+
         <div className="flex items-center space-x-4">
           {user ? (
             <>
@@ -23,17 +23,17 @@ const Header = () => {
                   {user.role}
                 </span>
               </div>
-              
-              {hasPermission(user, ['ADMIN']) && (
-                <Link 
-                  to="/user-management" 
+
+              {hasPermission(user, ["ADMIN"]) && (
+                <Link
+                  to="/user-management"
                   className="bg-blue-700 hover:bg-blue-800 px-4 py-2 mr-2 rounded-md btn-press-effect"
                 >
                   User Management
                 </Link>
               )}
-              
-              <button 
+
+              <button
                 onClick={logout}
                 className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md btn-press-effect"
               >
@@ -41,8 +41,8 @@ const Header = () => {
               </button>
             </>
           ) : (
-            <Link 
-              to="/signin" 
+            <Link
+              to="/signin"
               className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md btn-press-effect"
             >
               Sign In

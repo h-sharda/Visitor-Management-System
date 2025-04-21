@@ -1,9 +1,9 @@
 import express from "express";
-import { 
+import {
   createAccessRequest,
   getAccessRequests,
   approveAccessRequest,
-  rejectAccessRequest
+  rejectAccessRequest,
 } from "../controllers/accessRequestController.js";
 import { checkAdmin } from "../middlewares/authMiddleware.js";
 

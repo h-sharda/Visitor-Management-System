@@ -1,54 +1,63 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import { createAccessRequest } from '../services/api';
-import { useNotification } from '../hooks/useNotification';
-import '../styles/signin.css';
+import { useState, useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { createAccessRequest } from "../services/api";
+import { useNotification } from "../hooks/useNotification";
+import "../styles/signin.css";
 
 const SignUp = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     // If user is already logged in, redirect to home page
     if (user) {
-      navigate('/');
+      navigate("/");
     }
   }, [user, navigate]);
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    purpose: '',
+    fullName: "",
+    email: "",
+    purpose: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const { showNotification } = useNotification();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.fullName || !formData.email || !formData.purpose) {
-      showNotification('All fields are required', 'error');
+      showNotification("All fields are required", "error");
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     try {
       const response = await createAccessRequest(formData);
-      showNotification(response.message, 'success');
+      showNotification(response.message, "success");
       // Clear form
-      setFormData({ fullName: '', email: '', purpose: '' });
+      setFormData({ fullName: "", email: "", purpose: "" });
       // Redirect to signin with success message
-      navigate('/signin', { state: { message: 'Request submitted successfully. You will be notified once approved.' } });
+      navigate("/signin", {
+        state: {
+          message:
+            "Request submitted successfully. You will be notified once approved.",
+        },
+      });
     } catch (error) {
-      console.error('Signup error:', error);
-      showNotification(error.response?.data?.message || 'Error submitting request. Please try again.', 'error');
+      console.error("Signup error:", error);
+      showNotification(
+        error.response?.data?.message ||
+          "Error submitting request. Please try again.",
+        "error"
+      );
     } finally {
       setIsLoading(false);
     }

@@ -1,5 +1,5 @@
-import { createContext, useState, useEffect } from 'react';
-import { checkAuthState, logout } from '../services/auth';
+import { createContext, useState, useEffect } from "react";
+import { checkAuthState, logout } from "../services/auth";
 
 export const AuthContext = createContext(null);
 
@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
           setUser(null);
         }
       } catch (error) {
-        console.error('Auth initialization error:', error);
+        console.error("Auth initialization error:", error);
         setUser(null);
       } finally {
         setLoading(false);
@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
       await logout();
       setUser(null);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 

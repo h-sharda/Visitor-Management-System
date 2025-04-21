@@ -11,27 +11,36 @@ export const createAccessRequest = async (req, res) => {
     }
 
     if (purpose.length > 500) {
-      return res.status(400).json({ message: "Purpose must not exceed 500 characters" });
+      return res
+        .status(400)
+        .json({ message: "Purpose must not exceed 500 characters" });
     }
-    
+
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User with this email already exists" });
+      return res
+        .status(400)
+        .json({ message: "User with this email already exists" });
     }
 
     // Check if there's a pending request with this email
-    const existingRequest = await AccessRequest.findOne({ email, status: "PENDING" });
+    const existingRequest = await AccessRequest.findOne({
+      email,
+      status: "PENDING",
+    });
     if (existingRequest) {
-      return res.status(400).json({ message: "You already have a pending access request" });
+      return res
+        .status(400)
+        .json({ message: "You already have a pending access request" });
     }
 
     const newRequest = new AccessRequest({ fullName, email, purpose });
     await newRequest.save();
 
-    return res.status(201).json({ 
-      message: "Access request submitted successfully", 
-      request: newRequest 
+    return res.status(201).json({
+      message: "Access request submitted successfully",
+      request: newRequest,
     });
   } catch (error) {
     console.error("Error creating access request:", error);
@@ -62,7 +71,9 @@ export const approveAccessRequest = async (req, res) => {
     }
 
     if (request.status !== "PENDING") {
-      return res.status(400).json({ message: "This request has already been processed" });
+      return res
+        .status(400)
+        .json({ message: "This request has already been processed" });
     }
 
     // Create new user
@@ -77,9 +88,9 @@ export const approveAccessRequest = async (req, res) => {
     request.status = "APPROVED";
     await request.save();
 
-    return res.status(200).json({ 
+    return res.status(200).json({
       message: "Access request approved successfully",
-      user: newUser
+      user: newUser,
     });
   } catch (error) {
     console.error("Error approving access request:", error);
@@ -98,15 +109,17 @@ export const rejectAccessRequest = async (req, res) => {
     }
 
     if (request.status !== "PENDING") {
-      return res.status(400).json({ message: "This request has already been processed" });
+      return res
+        .status(400)
+        .json({ message: "This request has already been processed" });
     }
 
     // Update request status
     request.status = "REJECTED";
     await request.save();
 
-    return res.status(200).json({ 
-      message: "Access request rejected successfully" 
+    return res.status(200).json({
+      message: "Access request rejected successfully",
     });
   } catch (error) {
     console.error("Error rejecting access request:", error);

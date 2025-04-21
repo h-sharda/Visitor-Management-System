@@ -1,20 +1,20 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import SignInForm from '../components/SignInForm';
-import { useAuth } from '../hooks/useAuth';
-import '../styles/signin.css';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import SignInForm from "../components/SignInForm";
+import { useAuth } from "../hooks/useAuth";
+import "../styles/signin.css";
 
 const SignIn = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     // If user is already logged in, redirect to home page
     if (user) {
-      navigate('/');
+      navigate("/");
     }
   }, [user, navigate]);
-  
+
   return (
     <div className="flex flex-col justify-center items-center flex-grow translate-y-[10vh]">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

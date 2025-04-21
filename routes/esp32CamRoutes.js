@@ -51,7 +51,7 @@ router.post(
       const record = {
         timestamp: timestamp,
         imageKey: params.Key,
-        number: numberPlate
+        number: numberPlate,
       };
 
       // Save to MongoDB

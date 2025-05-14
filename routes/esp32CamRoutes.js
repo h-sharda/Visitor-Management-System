@@ -23,7 +23,7 @@ router.post(
         });
       }
 
-      if (!req.body.number_plate || !req.body.timestamp) {
+      if (!req.body.number_plate) {
         return res.status(400).json({
           status: "error",
           detail: "Missing required fields: number_plate and timestamp",
@@ -31,11 +31,10 @@ router.post(
       }
 
       const numberPlate = req.body.number_plate;
-      const timestamp = req.body.timestamp;
+      const timestamp = Date.now();
 
       // Generate a clean timestamp for the filename
       const cleanTimestamp = timestamp.replace(" ", "_").replace(/:/g, "-");
-      const imageFilename = `${cleanTimestamp}_${numberPlate}.bmp`;
 
       // Upload to S3
       const params = {

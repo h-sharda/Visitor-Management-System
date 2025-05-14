@@ -33,9 +33,6 @@ router.post(
       const numberPlate = req.body.number_plate;
       const timestamp = Date.now();
 
-      // Generate a clean timestamp for the filename
-      const cleanTimestamp = timestamp.replace(" ", "_").replace(/:/g, "-");
-
       // Upload to S3
       const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
